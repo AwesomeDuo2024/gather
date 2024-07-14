@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Project 4 App",
+  title: "Project 4 - Availability Scheduler",
 };
 
 export default function RootLayout({
