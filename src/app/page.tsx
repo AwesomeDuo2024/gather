@@ -1,4 +1,5 @@
 import { createClient } from "@/app/utils/supabase/server";
+import EventCalendar from "@/components/EventCalendar";
 
 export default async function HomePage() {
   const supabase = createClient();
@@ -6,10 +7,10 @@ export default async function HomePage() {
   const { data: users } = await supabase.from("User").select();
   const { data: dates } = await supabase.from("Date").select();
   const { data: availabilities } = await supabase.from("Availability").select();
-  console.log(events);
   return (
     <>
       <h1>Home page</h1>
+      <EventCalendar />
       <h2>Records from Supabase Event table:</h2>
       <pre>{JSON.stringify(events, null, 2)}</pre>
       <h2>Records from Supabase User table:</h2>
