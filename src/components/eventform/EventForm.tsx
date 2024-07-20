@@ -44,7 +44,7 @@ const EventForm = () => {
   }
 
   return (
-    <main className="absolute top-60 bg-white border drop-shadow-xl p-8 rounded-lg flex flex-col gap-6 items-center">
+    <main className="absolute top-60 bg-white border drop-shadow-xl p-10 rounded-lg flex flex-col gap-6 items-center">
       <h2 className="text-xl font-medium">Create Event</h2>
       <Form {...form}>
         <form
