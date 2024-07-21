@@ -9,7 +9,7 @@ export default async function HomePage() {
   const { data: availabilities } = await supabase.from("Availability").select();
   return (
     <>
-      <div className="bg-gray-900 w-full h-[32rem]"></div>
+      <div className="bg-gray-900 w-full h-[36rem]"></div>
       <EventForm />
       {/* <h2>Records from Supabase Event table:</h2>
       <pre>{JSON.stringify(events, null, 2)}</pre>

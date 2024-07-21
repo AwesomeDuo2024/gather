@@ -1,7 +1,7 @@
 "use client";
 // https://www.youtube.com/watch?v=oGq9o2BxlaI
 
-import DayPicker from "@/components/eventform/DayPicker";
+import { Calendar } from "@/components/ui/calendar";
 import { formSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,8 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createEvent, createDates } from "@/lib/actions";
+import { useRouter } from "next/navigation";
 
 const EventForm = () => {
+  const router = useRouter();
+
   // Define form.
   const form = useForm<z.infer<typeof formSchema>>({
     // resolver links react-hook-form to zod schema
@@ -33,19 +37,24 @@ const EventForm = () => {
       eventName: "",
       start: "",
       end: "",
+      dates: [],
     },
   });
 
   // onSubmit handler that runs only when form is valid
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const newEvent = await createEvent(values);
+    // console.log(newEvent);
+    const newEventId = newEvent?.data?.[0]?.id;
+    const newEventLink = newEvent?.data?.[0]?.event_link;
+    const newDates = await createDates(values, newEventId);
+    // console.log(newDates);
+    router.push(`/${newEventLink}`);
   }
 
   return (
-    <main className="absolute top-60 bg-white border drop-shadow-xl p-10 rounded-lg flex flex-col gap-6 items-center">
-      <h2 className="text-xl font-medium">Create Event</h2>
+    <main className="absolute top-20 bg-white border drop-shadow-xl p-10 rounded-lg flex flex-col items-center w-[30rem]">
+      <h2 className="text-2xl font-medium mb-4">Create Event</h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -65,10 +74,12 @@ const EventForm = () => {
               );
             }}
           />
-          <h2 className="text-xl font-medium self-center my-2">
+
+          <h2 className="text-xl font-medium self-center mt-4">
             When&apos;s a good time?
           </h2>
-          <div className="flex justify-between items-center">
+
+          <div className="flex justify-between items-start">
             <FormField
               control={form.control}
               name="start"
@@ -99,7 +110,9 @@ const EventForm = () => {
                 );
               }}
             />
-            <div>to</div>
+
+            <div className="mt-2">to</div>
+
             <FormField
               control={form.control}
               name="end"
@@ -132,12 +145,45 @@ const EventForm = () => {
             />
           </div>
 
-          <Button type="submit" variant="default" className="w-full">
+          <h2 className="text-xl font-medium self-center mt-4">
+            Which dates are you looking at?
+          </h2>
+
+          <FormField
+            control={form.control}
+            name="dates"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormControl>
+                    <Calendar
+                      mode="multiple"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      // const formattedDates = dates?.map((date) => {
+                      //   const year = date.getFullYear();
+                      //   const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() is zero-based; add 1 to match the calendar month
+                      //   const day = String(date.getDate()).padStart(2, "0");
+                      //   return `${year}-${month}-${day}`; // Formats the date as "YYYY-MM-DD"
+                      // });
+                      className="rounded-md border caret-transparent flex justify-center"
+                      // Disable past dates => pass Matcher prop https://daypicker.dev/next/api/type-aliases/Matcher
+                      disabled={{ before: new Date() }}
+                      // Set earliest month to current month so users cannot navigate to past months https://daypicker.dev/using-daypicker/navigation#disabling-navigation
+                      fromMonth={new Date()}
+                      // Set default value of showOutsideDays to false
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
+          <Button type="submit" variant="default" className="w-full mt-4">
             Create Event
           </Button>
         </form>
       </Form>
-      <DayPicker />
     </main>
   );
 };
