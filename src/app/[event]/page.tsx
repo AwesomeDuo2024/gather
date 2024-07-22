@@ -18,6 +18,7 @@ import {
   getCurrentEventDates,
 } from "@/lib/utils";
 import { FetchedData } from "@/lib/schema";
+import ClipboardButton from "@/components/ClipboardButton";
 
 const EventPage = async ({ params }: { params: { event: string } }) => {
   // Fetch data from Supabase
@@ -51,7 +52,9 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
         <DialogContent className="sm:max-w-[30rem] max-h-[90%] justify-center">
           <DialogHeader>
             <DialogTitle className="mb-2">Update event details</DialogTitle>
-            <DialogDescription className="text-gray-600">Any invitee can update this event</DialogDescription>
+            <DialogDescription className="text-gray-600">
+              Any invitee can update this event
+            </DialogDescription>
           </DialogHeader>
           <UpdateEventForm
             eventName={currentEventName}
@@ -61,6 +64,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           />
         </DialogContent>
       </Dialog>
+      <ClipboardButton />
       <Link href="/" className="p-4 bg-blue-400">
         Return to Home Button
       </Link>
