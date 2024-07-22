@@ -1,5 +1,4 @@
 "use client";
-// https://www.youtube.com/watch?v=oGq9o2BxlaI
 
 import { Calendar } from "@/components/ui/calendar";
 import { formSchema } from "@/lib/schema";
@@ -23,47 +22,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createEvent, createDates } from "@/lib/actions";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
-const EventForm = () => {
+const EventForm = ({
+  eventName,
+  eventStartTime,
+  eventEndTime,
+  eventDates,
+}: {
+  eventName: string;
+  eventStartTime: string;
+  eventEndTime: string;
+  eventDates: (Date | undefined)[];
+}) => {
   const [isLoading, setIsLoading] = useState(false);
-
-  const router = useRouter();
 
   // Define form.
   const form = useForm<z.infer<typeof formSchema>>({
     // resolver links react-hook-form to zod schema
     resolver: zodResolver(formSchema),
     defaultValues: {
-      eventName: "",
-      start: "",
-      end: "",
-      dates: [],
+      eventName,
+      start: eventStartTime,
+      end: eventEndTime,
+      dates: eventDates,
     },
   });
 
   // onSubmit handler that runs only when form is valid
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const newEvent = await createEvent(values);
-    // console.log(newEvent);
-    const newEventId = newEvent?.data?.[0]?.id;
-    const newEventLink = newEvent?.data?.[0]?.event_link;
-    const newDates = await createDates(values, newEventId);
-    // console.log(newDates);
-    router.push(`/${newEventLink}`);
+    console.log(values);
+    // const newEvent = await createEvent(values);
+    // // console.log(newEvent);
+    // const newEventId = newEvent?.data?.[0]?.id;
+    // const newEventLink = newEvent?.data?.[0]?.event_link;
+    // const newDates = await createDates(values, newEventId);
+    // // console.log(newDates);
+    // router.push(`/${newEventLink}`);
   }
 
   return (
-    <main className="absolute top-20 bg-white border drop-shadow-xl p-10 rounded-lg flex flex-col items-center w-[30rem]">
-      <h2 className="text-2xl font-medium mb-4">Create Event</h2>
+    <main className=" flex flex-col items-center">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="max-w-md w-full flex flex-col gap-4"
+          className="max-w-md w-full flex flex-col gap-4 relative"
         >
           <FormField
             control={form.control}
@@ -80,9 +85,7 @@ const EventForm = () => {
             }}
           />
 
-          <h2 className="text-xl font-medium self-center mt-4">
-            When&apos;s a good time?
-          </h2>
+          <h2 className="text-lg self-center mt-2">When&apos;s a good time?</h2>
 
           <div className="flex justify-between items-start">
             <FormField
@@ -150,7 +153,7 @@ const EventForm = () => {
             />
           </div>
 
-          <h2 className="text-xl font-medium self-center mt-4">
+          <h2 className="text-lg self-center mt-2">
             Which dates are you looking at?
           </h2>
 
@@ -165,7 +168,7 @@ const EventForm = () => {
                       mode="multiple"
                       selected={field.value}
                       onSelect={field.onChange}
-                      className="rounded-md border caret-transparent flex justify-center"
+                      className="rounded-md border caret-transparent flex mx-auto"
                       // Disable past dates => pass Matcher prop https://daypicker.dev/next/api/type-aliases/Matcher
                       disabled={{ before: new Date() }}
                       // Set earliest month to current month so users cannot navigate to past months https://daypicker.dev/using-daypicker/navigation#disabling-navigation
@@ -181,11 +184,11 @@ const EventForm = () => {
           {isLoading ? (
             <Button disabled className="w-full mt-4">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating Event...
+              Updating Event...
             </Button>
           ) : (
             <Button type="submit" variant="default" className="w-full mt-4">
-              Create Event
+              Update Event
             </Button>
           )}
         </form>

@@ -16,3 +16,14 @@ export type EventData = {
   end: string;
   dates: Date[];
 };
+
+
+export interface FetchedData {
+  event_name: string;
+  Date: {
+    start_datetime: string;
+    end_datetime: string;
+  }[];
+}
+[];
+
