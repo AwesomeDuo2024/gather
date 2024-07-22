@@ -25,8 +25,12 @@ import {
 } from "@/components/ui/select";
 import { createEvent, createDates } from "@/lib/actions";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const EventForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   // Define form.
@@ -43,6 +47,7 @@ const EventForm = () => {
 
   // onSubmit handler that runs only when form is valid
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     const newEvent = await createEvent(values);
     // console.log(newEvent);
     const newEventId = newEvent?.data?.[0]?.id;
@@ -160,12 +165,6 @@ const EventForm = () => {
                       mode="multiple"
                       selected={field.value}
                       onSelect={field.onChange}
-                      // const formattedDates = dates?.map((date) => {
-                      //   const year = date.getFullYear();
-                      //   const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() is zero-based; add 1 to match the calendar month
-                      //   const day = String(date.getDate()).padStart(2, "0");
-                      //   return `${year}-${month}-${day}`; // Formats the date as "YYYY-MM-DD"
-                      // });
                       className="rounded-md border caret-transparent flex justify-center"
                       // Disable past dates => pass Matcher prop https://daypicker.dev/next/api/type-aliases/Matcher
                       disabled={{ before: new Date() }}
@@ -179,9 +178,16 @@ const EventForm = () => {
               );
             }}
           />
-          <Button type="submit" variant="default" className="w-full mt-4">
-            Create Event
-          </Button>
+          {isLoading ? (
+            <Button disabled className="w-full mt-4">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating Event...
+            </Button>
+          ) : (
+            <Button type="submit" variant="default" className="w-full mt-4">
+              Create Event
+            </Button>
+          )}
         </form>
       </Form>
     </main>
