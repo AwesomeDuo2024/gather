@@ -1,6 +1,6 @@
-import { Value } from "@radix-ui/react-select";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { FetchedData } from "@/lib/schema";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -32,3 +32,17 @@ export const TIME_PICKER_OPTIONS = [
   { value: "22:00:00", label: "10 pm" },
   { value: "23:00:00", label: "11 pm" },
 ];
+
+export const getCurrentEventName = (data: FetchedData[]) =>
+  data && data[0]?.event_name;
+
+export const getCurrentEventStartTime = (data: FetchedData[]) =>
+  data && data[0]?.Date[0]?.start_datetime.split("T")[1].split("+")[0];
+
+export const getCurrentEventEndTime = (data: FetchedData[]) =>
+  data && data[0]?.Date[0]?.end_datetime.split("T")[1].split("+")[0];
+
+export const getCurrentEventDates = (data: FetchedData[]) =>
+  (data && data[0]?.Date?.map((date) => date.start_datetime))?.map(
+    (dateString) => new Date(dateString)
+  ) || [];
