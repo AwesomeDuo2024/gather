@@ -24,17 +24,20 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { updateEventAndDates } from "@/lib/actions";
 
 const EventForm = ({
   eventName,
   eventStartTime,
   eventEndTime,
   eventDates,
+  eventId,
 }: {
   eventName: string;
   eventStartTime: string;
   eventEndTime: string;
   eventDates: (Date | undefined)[];
+  eventId: number;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,14 +56,12 @@ const EventForm = ({
   // onSubmit handler that runs only when form is valid
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    console.log(values);
-    // const newEvent = await createEvent(values);
-    // // console.log(newEvent);
-    // const newEventId = newEvent?.data?.[0]?.id;
-    // const newEventLink = newEvent?.data?.[0]?.event_link;
-    // const newDates = await createDates(values, newEventId);
-    // // console.log(newDates);
-    // router.push(`/${newEventLink}`);
+    // console.log(values);
+    const updatedEvent = await updateEventAndDates(values, eventId);
+    // console.log(updatedEvent);
+
+    // Reload current page using native web API
+    window.location.reload();
   }
 
   return (

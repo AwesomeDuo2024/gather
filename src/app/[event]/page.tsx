@@ -25,9 +25,12 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("Event")
-    .select(`event_name, Date (start_datetime, end_datetime)`)
+    .select(`event_name, id, Date (start_datetime, end_datetime)`)
     .eq("event_link", params.event);
 
+  // Extract event id from fetched data
+  const currentEventId = data && data[0]?.id;
+  
   // Extract event name from fetched data
   const currentEventName = getCurrentEventName(data as FetchedData[]);
   // console.log(currentEventName);
@@ -61,6 +64,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
             eventStartTime={currentEventStartTime}
             eventEndTime={currentEventEndTime}
             eventDates={currentEventDates}
+            eventId={currentEventId}
           />
         </DialogContent>
       </Dialog>
