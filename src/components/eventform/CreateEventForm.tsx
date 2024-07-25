@@ -58,7 +58,7 @@ const CreateEventForm = () => {
   }
 
   return (
-    <main className="absolute top-20 bg-white border drop-shadow-xl p-10 rounded-lg flex flex-col items-center w-[30rem]">
+    <main className="bg-white border drop-shadow-xl mx-5 p-6 sm:p-10 rounded-lg flex flex-col items-center">
       <h2 className="text-xl font-medium mb-4">Create Event</h2>
       <Form {...form}>
         <form
@@ -163,7 +163,7 @@ const CreateEventForm = () => {
                       mode="multiple"
                       selected={field.value}
                       onSelect={field.onChange}
-                      className="rounded-md border caret-transparent flex mx-auto"
+                      className="rounded-md border caret-transparent flex mx-auto justify-center"
                       // Disable past dates => pass Matcher prop https://daypicker.dev/next/api/type-aliases/Matcher
                       disabled={{ before: new Date() }}
                       // Set earliest month to current month so users cannot navigate to past months https://daypicker.dev/using-daypicker/navigation#disabling-navigation
