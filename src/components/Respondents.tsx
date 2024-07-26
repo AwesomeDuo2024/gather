@@ -62,7 +62,7 @@ const Respondents = ({
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="my-2">
+                    <AlertDialogTitle className="mb-1">
                       Removing {name}&apos;s availabilities
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-gray-700">
