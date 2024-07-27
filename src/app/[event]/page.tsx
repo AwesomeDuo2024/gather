@@ -17,20 +17,37 @@ import {
   getCurrentEventStartTime,
   getCurrentEventEndTime,
   getCurrentEventDates,
+  calculateTimeSlotBlocks,
 } from "@/lib/utils";
 import { FetchedData } from "@/lib/schema";
 import ClipboardButton from "@/components/ClipboardButton";
 import Respondents from "@/components/Respondents";
+import DateHeader from "@/components/timePicker/DateHeader";
+import TimeSlot from "@/components/timePicker/TimeSlot";
+import { start } from "repl";
+import TimeSlotBlock from "@/components/timePicker/TimeSlotBlock";
 
 const EventPage = async ({ params }: { params: { event: string } }) => {
+  // in URL = http://localhost:3000/6f35722e-1cc1-4448-a5e5-bcb77b9f8c8f
+  // params.event = 6f35722e-1cc1-4448-a5e5-bcb77b9f8c8f
+  console.log("EventPage params", params);
+
   // Fetch data from Supabase
   const supabase = createClient();
+
   const { data, error } = await supabase
     .from("Event")
     .select(
       `event_name, id, Date (start_datetime, end_datetime), User (user_id, name)`
     )
     .eq("event_link", params.event);
+
+  console.log("EventPage data", data);
+
+  const endTime = data![0].Date[0].end_datetime;
+  const startTime = data![0].Date[0].start_datetime;
+  // const duration_end_datetime = dayjs(end_datetime).duration();
+  // const duration_start_datetime = dayjs(start_datetime);
 
   // Extract event id from fetched data
   const currentEventId = data && data[0]?.id;
@@ -52,35 +69,59 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   const respondentsData = data && data[0].User;
   // console.log(respondentsData);
 
+  console.log("EventPage startTime", startTime);
+  console.log("EventPage endTime", endTime);
+
+  // const timeSlots = calculateTimeSlotBlocks(startTime, endTime);
+  // console.log("EventPage timeSlots", timeSlots);
+
   return (
     <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="default" className="my-4">
-            Edit Event
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[30rem] max-h-[90%] justify-center">
-          <DialogHeader>
-            <DialogTitle className="mb-2">Update event details</DialogTitle>
-            <DialogDescription className="text-gray-600">
-              Any invitee can update this event
-            </DialogDescription>
-          </DialogHeader>
-          <UpdateEventForm
-            eventName={currentEventName}
-            eventStartTime={currentEventStartTime}
-            eventEndTime={currentEventEndTime}
-            eventDates={currentEventDates}
-            eventId={currentEventId}
-          />
-        </DialogContent>
-      </Dialog>
-      <ClipboardButton />
-      <Respondents respondentsData={respondentsData} />
-      <Link href="/" className="p-4 bg-blue-400">
-        Return to Home Button
-      </Link>
+      <div className="flex bg-red-200 w-[100%] h-svh items-center gap-5 justify-center">
+        {/* TimePicker */}
+        <div className="flex gap-2">
+          {/* DateHeader */}
+          {/* <DateHeader></DateHeader> */}
+          {/* TimeSlot */}
+
+          {/* Time */}
+          <TimeSlot startTime={startTime} endTime={endTime} interval={30} />
+          {/* Blocks */}
+          <TimeSlotBlock startTime={startTime} endTime={endTime} />
+        </div>
+
+        {/* ====================================== */}
+        {/* Event Controls */}
+        {/* <div className="flex flex-col bg-yellow-200">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="default" className="my-4">
+                Edit Event
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[30rem] max-h-[90%] justify-center">
+              <DialogHeader>
+                <DialogTitle className="mb-2">Update event details</DialogTitle>
+                <DialogDescription className="text-gray-600">
+                  Any invitee can update this event
+                </DialogDescription>
+              </DialogHeader>
+              <UpdateEventForm
+                eventName={currentEventName}
+                eventStartTime={currentEventStartTime}
+                eventEndTime={currentEventEndTime}
+                eventDates={currentEventDates}
+                eventId={currentEventId}
+              />
+            </DialogContent>
+          </Dialog>
+          <ClipboardButton />
+          <Respondents respondentsData={respondentsData} />
+          <Link href="/" className="p-4 bg-blue-400">
+            Return to Home Button
+          </Link>
+        </div> */}
+      </div>
     </>
   );
 };

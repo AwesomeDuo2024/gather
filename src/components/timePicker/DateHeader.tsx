@@ -3,7 +3,7 @@
 import React from "react";
 
 const DateHeader = () => {
-  return <div>DateHeader</div>;
+  return <h1>DateHeader</h1>;
 };
 
 export default DateHeader;

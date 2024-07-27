@@ -2,6 +2,12 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { FetchedData } from "@/lib/schema";
 
+// Import dayjs
+var dayjs = require("dayjs");
+var localizedFormat = require("dayjs/plugin/localizedFormat");
+
+dayjs.extend(localizedFormat);
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -46,3 +52,15 @@ export const getCurrentEventDates = (data: FetchedData[]) =>
   (data && data[0]?.Date?.map((date) => date.start_datetime))?.map(
     (dateString) => new Date(dateString)
   ) || [];
+
+/**
+ ================= Time Picker =================
+ */
+
+export const calculateTimeSlotBlocks = (
+  startTime: string,
+  endTime: string,
+  interval = 30
+) => {
+  return dayjs(endTime).diff(dayjs(startTime), "minute") / interval;
+};

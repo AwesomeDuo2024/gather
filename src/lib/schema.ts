@@ -25,4 +25,3 @@ export interface FetchedData {
     end_datetime: string;
   }[];
 }
-[];
