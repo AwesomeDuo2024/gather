@@ -7,7 +7,7 @@ import {
 
 const FAQ = () => {
   return (
-    <div className="w-3/4 max-w-[40rem] mt-96 mb-28">
+    <div className=" max-w-[40rem] my-12 container">
       <Accordion type="multiple" className="w-full flex flex-col gap-6">
         <AccordionItem value="item-1">
           <AccordionTrigger>Question 1</AccordionTrigger>
