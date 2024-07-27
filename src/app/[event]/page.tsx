@@ -26,6 +26,9 @@ import DateHeader from "@/components/timePicker/DateHeader";
 import TimeSlot from "@/components/timePicker/TimeSlot";
 import { start } from "repl";
 import TimeSlotBlock from "@/components/timePicker/TimeSlotBlock";
+import { DateData } from "@/lib/schema";
+
+var dayjs = require("dayjs");
 
 const EventPage = async ({ params }: { params: { event: string } }) => {
   // in URL = http://localhost:3000/6f35722e-1cc1-4448-a5e5-bcb77b9f8c8f
@@ -43,6 +46,12 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
     .eq("event_link", params.event);
 
   console.log("EventPage data", data);
+
+  const dates = data![0].Date.sort(
+    (a, b) => dayjs(a.start_datetime) - dayjs(b.start_datetime)
+  ) as DateData[];
+
+  console.log("EventPage date", dates);
 
   const endTime = data![0].Date[0].end_datetime;
   const startTime = data![0].Date[0].start_datetime;
@@ -79,15 +88,18 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
     <>
       <div className="flex bg-red-200 w-[100%] h-svh items-center gap-5 justify-center">
         {/* TimePicker */}
-        <div className="flex gap-2">
-          {/* DateHeader */}
-          {/* <DateHeader></DateHeader> */}
+        <div className="flex w-[50rem]">
           {/* TimeSlot */}
-
           {/* Time */}
           <TimeSlot startTime={startTime} endTime={endTime} interval={30} />
-          {/* Blocks */}
-          <TimeSlotBlock startTime={startTime} endTime={endTime} />
+          {/* Time Blocks */}
+          {dates.map((date, ind) => (
+            <TimeSlotBlock
+              startTime={date.start_datetime}
+              endTime={date.end_datetime}
+              key={ind}
+            />
+          ))}
         </div>
 
         {/* ====================================== */}

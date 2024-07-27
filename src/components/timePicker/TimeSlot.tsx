@@ -37,7 +37,9 @@ const TimeSlot = ({
   // Output = ["12am", "1am", "2am"]
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-none mr-2">
+      <div className="h-[5rem]"></div>
+
       {timeSlots.map((item, ind) => (
         <div
           key={ind}
