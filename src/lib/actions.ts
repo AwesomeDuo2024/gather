@@ -83,3 +83,23 @@ export async function updateEventAndDates(
 
   return { data, error };
 }
+
+export async function deleteUserAndAvailabilities(userId: number) {
+  const supabase = createClient();
+
+  const response = await supabase
+    .from("Availability")
+    .delete()
+    .in("user_id", [userId]);
+
+  if (response.status === 204) {
+    const { data, error } = await supabase
+      .from("User")
+      .delete()
+      .eq("user_id", userId)
+      .select();
+    return { data, error };
+  } else {
+    return { data: null, error: response.error };
+  }
+}

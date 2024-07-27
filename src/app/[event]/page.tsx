@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/app/utils/supabase/server";
 import { Button } from "@/components/ui/button";
+
 import {
   Dialog,
   DialogContent,
@@ -19,18 +20,21 @@ import {
 } from "@/lib/utils";
 import { FetchedData } from "@/lib/schema";
 import ClipboardButton from "@/components/ClipboardButton";
+import Respondents from "@/components/Respondents";
 
 const EventPage = async ({ params }: { params: { event: string } }) => {
   // Fetch data from Supabase
   const supabase = createClient();
   const { data, error } = await supabase
     .from("Event")
-    .select(`event_name, id, Date (start_datetime, end_datetime)`)
+    .select(
+      `event_name, id, Date (start_datetime, end_datetime), User (user_id, name)`
+    )
     .eq("event_link", params.event);
 
   // Extract event id from fetched data
   const currentEventId = data && data[0]?.id;
-  
+
   // Extract event name from fetched data
   const currentEventName = getCurrentEventName(data as FetchedData[]);
   // console.log(currentEventName);
@@ -43,6 +47,10 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   // Extract event dates (string) and convert each to Date objects
   const currentEventDates = getCurrentEventDates(data as FetchedData[]);
   // console.log(currentEventDates);
+
+  // Extract respondents data to be used in Respondents component
+  const respondentsData = data && data[0].User;
+  // console.log(respondentsData);
 
   return (
     <>
@@ -69,6 +77,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
         </DialogContent>
       </Dialog>
       <ClipboardButton />
+      <Respondents respondentsData={respondentsData} />
       <Link href="/" className="p-4 bg-blue-400">
         Return to Home Button
       </Link>
