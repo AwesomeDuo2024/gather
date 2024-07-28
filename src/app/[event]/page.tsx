@@ -29,6 +29,7 @@ import { DateData } from "@/lib/schema";
 import TimeSlotBigBlock from "@/components/timePicker/TimeSlotBigBlock";
 import TimeSlotBigBlockCellSelection from "@/components/timePicker/TimeSlotBigBlockCellSelection";
 import { useMemo } from "react";
+import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
 
 var dayjs = require("dayjs");
 
@@ -88,48 +89,48 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
 
   //
 
-  const columns = [
-    {
-      Header: "Jul 22",
-      // hideHeader: false,
-      columns: [
-        {
-          Header: "Mon",
-          accessor: "mon_jul_22",
-        },
-      ],
-    },
+  // const columns = [
+  //   {
+  //     Header: "Jul 22",
+  //     // hideHeader: false,
+  //     columns: [
+  //       {
+  //         Header: "Mon",
+  //         accessor: "mon_jul_22",
+  //       },
+  //     ],
+  //   },
 
-    {
-      Header: "Jul 23",
-      // hideHeader: false,
-      columns: [
-        {
-          Header: "Tue",
-          accessor: "mon_jul_23",
-        },
-      ],
-    },
-  ];
+  //   {
+  //     Header: "Jul 23",
+  //     // hideHeader: false,
+  //     columns: [
+  //       {
+  //         Header: "Tue",
+  //         accessor: "mon_jul_23",
+  //       },
+  //     ],
+  //   },
+  // ];
 
-  const t_data = [
-    {
-      mon_jul_22: "bridge-2",
-      mon_jul_23: "1111",
-    },
-    {
-      mon_jul_22: "0000",
-      mon_jul_23: "unit-",
-    },
-    {
-      mon_jul_22: "0000",
-      mon_jul_23: "unit-",
-    },
-    {
-      mon_jul_22: "0000",
-      mon_jul_23: "unit-",
-    },
-  ];
+  // const t_data = [
+  //   {
+  //     mon_jul_22: "bridge-2",
+  //     mon_jul_23: "1111",
+  //   },
+  //   {
+  //     mon_jul_22: "0000",
+  //     mon_jul_23: "unit-",
+  //   },
+  //   {
+  //     mon_jul_22: "0000",
+  //     mon_jul_23: "unit-",
+  //   },
+  //   {
+  //     mon_jul_22: "0000",
+  //     mon_jul_23: "unit-",
+  //   },
+  // ];
 
   return (
     <>
@@ -140,7 +141,8 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           {/* Time */}
           <TimeSlot startTime={startTime} endTime={endTime} interval={30} />
           {/* <TimeSlotBigBlockCellSelection columns={columns} data={t_data} /> */}
-          <TimeSlotBigBlock dates={dates}></TimeSlotBigBlock>
+          {/* <TimeSlotBigBlock dates={dates}></TimeSlotBigBlock> */}
+          <TimeSlotDragSelector dates={dates} />
         </div>
 
         {/* ====================================== */}
