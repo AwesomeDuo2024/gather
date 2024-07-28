@@ -22,11 +22,11 @@ import {
 import { FetchedData } from "@/lib/schema";
 import ClipboardButton from "@/components/ClipboardButton";
 import Respondents from "@/components/Respondents";
-import DateHeader from "@/components/timePicker/DateHeader";
 import TimeSlot from "@/components/timePicker/TimeSlot";
 import { start } from "repl";
 import TimeSlotBlock from "@/components/timePicker/TimeSlotBlock";
 import { DateData } from "@/lib/schema";
+import TimeSlotBigBlock from "@/components/timePicker/TimeSlotBigBlock";
 
 var dayjs = require("dayjs");
 
@@ -92,14 +92,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           {/* TimeSlot */}
           {/* Time */}
           <TimeSlot startTime={startTime} endTime={endTime} interval={30} />
-          {/* Time Blocks */}
-          {dates.map((date, ind) => (
-            <TimeSlotBlock
-              startTime={date.start_datetime}
-              endTime={date.end_datetime}
-              key={ind}
-            />
-          ))}
+          <TimeSlotBigBlock dates={dates}></TimeSlotBigBlock>
         </div>
 
         {/* ====================================== */}

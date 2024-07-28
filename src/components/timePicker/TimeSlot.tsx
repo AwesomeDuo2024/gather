@@ -38,7 +38,7 @@ const TimeSlot = ({
 
   return (
     <div className="flex flex-col flex-none mr-2">
-      <div className="h-[5rem]"></div>
+      <div className="h-[4rem]"></div>
 
       {timeSlots.map((item, ind) => (
         <div
