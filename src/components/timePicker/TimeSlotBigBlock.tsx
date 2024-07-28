@@ -42,7 +42,39 @@ const TimeSlotBigBlock = ({ dates }: { dates: DateData[] }) => {
   console.log("TimeSlotBigBlock endTime", dates[0].end_datetime);
 
   const mouseRef = useRef<boolean>(false);
-  // const [isMouseDown, setIsMouseDown] = useState(false);
+
+  // States
+
+  /*
+
+{
+2024/07/30 21:00: false,
+2024/07/30 21:30: false
+}
+*/
+
+  const initialCells = Object();
+
+  dates.map((date, ind) => {
+    slots.map((slot, s_ind) => {
+      if (s_ind < slots.length - 1)
+        initialCells[
+          dayjs(date.start_datetime)
+            .utc()
+            .add(s_ind * 30, "minute")
+            .format("YYYY/MM/DD HH:mm")
+        ] = false;
+    });
+  });
+
+  console.log("initialCells", initialCells);
+
+  const [selectedCells, setSelectedCells] = useState<any>(initialCells);
+
+  useEffect(() => {
+    console.log("Changed selectedCells", selectedCells);
+  }, [selectedCells]);
+
   // Mouse Events
   const handleMouseDown = (
     e: React.MouseEvent,
@@ -126,29 +158,6 @@ const TimeSlotBigBlock = ({ dates }: { dates: DateData[] }) => {
                 if (s_ind === 0) {
                   return (
                     <div
-                      onMouseUp={(e) => {
-                        mouseRef.current = false;
-                        console.log(
-                          `mouseUp - ${dayjs(date.start_datetime)
-                            .utc()
-                            .add(slot * 30, "minute")
-                            .format("YYYY/MM/DD HH:mm")}`
-                        );
-                      }}
-                      onMouseEnter={(e) => {
-                        if (mouseRef.current == true)
-                          console.log(
-                            `handleMouseDrag - ${dayjs(date.start_datetime)
-                              .utc()
-                              .add(slot * 30, "minute")
-                              .format("YYYY/MM/DD HH:mm")}`
-                          );
-                      }}
-                      onMouseDown={(e) => {
-                        mouseRef.current = true;
-                        console.log("mouseDown");
-                        console.log(ind, s_ind);
-                      }}
                       key={s_ind}
                       className="w-[4rem] text-primary-content grid h-[2rem] place-content-center"
                     ></div>
@@ -175,7 +184,16 @@ const TimeSlotBigBlock = ({ dates }: { dates: DateData[] }) => {
                         );
                     }}
                     onMouseDown={(e) => {
+                      e.preventDefault();
                       mouseRef.current = true;
+                      const selectedCell = dayjs(date.start_datetime)
+                        .utc()
+                        .add((slot - 1) * 30, "minute")
+                        .format("YYYY/MM/DD HH:mm");
+
+                      const selectedObject = Object();
+                      selectedObject[selectedCell] = true;
+                      setSelectedCells({ ...selectedCells, ...selectedObject });
                       console.log(
                         `mouseDown - ${dayjs(date.start_datetime)
                           .utc()
@@ -185,7 +203,9 @@ const TimeSlotBigBlock = ({ dates }: { dates: DateData[] }) => {
                     }}
                     key={s_ind}
                     className="w-[4rem] text-primary-content grid h-10 place-content-center bg-white border-b border-r border-dashed"
-                  ></div>
+                  >
+                    {}
+                  </div>
                 );
               })}
             </div>
