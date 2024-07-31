@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Pencil, Trash } from "lucide-react";
 import { deleteUserAndAvailabilities } from "@/lib/actions";
 import {
@@ -15,12 +15,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ModeContext } from "@/app/theme-provider";
 
 const Respondents = ({
   respondentsData,
 }: {
   respondentsData: { name: string; user_id: number }[] | null;
 }) => {
+  const { mode, setMode } = useContext(ModeContext);
   const sortedRespondents = respondentsData?.sort((a, b) =>
     a.name.localeCompare(b.name)
   );
@@ -29,7 +31,14 @@ const Respondents = ({
 
   return (
     <>
-      <Button variant="default" className="my-4">
+      <Button
+        variant="default"
+        className="my-4"
+        onClick={() => {
+          console.log("Clicked add availability");
+          setMode("write");
+        }}
+      >
         Add availability
       </Button>
       <p>Respondents:</p>

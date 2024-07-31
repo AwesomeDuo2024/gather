@@ -28,15 +28,15 @@ import TimeSlotBlock from "@/components/timePicker/TimeSlotBlock";
 import { DateData } from "@/lib/schema";
 import TimeSlotBigBlock from "@/components/timePicker/TimeSlotBigBlock";
 import TimeSlotBigBlockCellSelection from "@/components/timePicker/TimeSlotBigBlockCellSelection";
-import { useMemo } from "react";
 import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
+import { useContext } from "react";
+import { ModeContext } from "../theme-provider";
 
 var dayjs = require("dayjs");
 
 const EventPage = async ({ params }: { params: { event: string } }) => {
   // in URL = http://localhost:3000/6f35722e-1cc1-4448-a5e5-bcb77b9f8c8f
   // params.event = 6f35722e-1cc1-4448-a5e5-bcb77b9f8c8f
-  console.log("EventPage params", params);
 
   // Fetch data from Supabase
   const supabase = createClient();
@@ -79,62 +79,14 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
 
   // Extract respondents data to be used in Respondents component
   const respondentsData = data && data[0].User;
-  // console.log(respondentsData);
-
-  console.log("EventPage startTime", startTime);
-  console.log("EventPage endTime", endTime);
+  console.log("EventPage - respondentsData", respondentsData);
 
   // const timeSlots = calculateTimeSlotBlocks(startTime, endTime);
   // console.log("EventPage timeSlots", timeSlots);
 
-  //
-
-  // const columns = [
-  //   {
-  //     Header: "Jul 22",
-  //     // hideHeader: false,
-  //     columns: [
-  //       {
-  //         Header: "Mon",
-  //         accessor: "mon_jul_22",
-  //       },
-  //     ],
-  //   },
-
-  //   {
-  //     Header: "Jul 23",
-  //     // hideHeader: false,
-  //     columns: [
-  //       {
-  //         Header: "Tue",
-  //         accessor: "mon_jul_23",
-  //       },
-  //     ],
-  //   },
-  // ];
-
-  // const t_data = [
-  //   {
-  //     mon_jul_22: "bridge-2",
-  //     mon_jul_23: "1111",
-  //   },
-  //   {
-  //     mon_jul_22: "0000",
-  //     mon_jul_23: "unit-",
-  //   },
-  //   {
-  //     mon_jul_22: "0000",
-  //     mon_jul_23: "unit-",
-  //   },
-  //   {
-  //     mon_jul_22: "0000",
-  //     mon_jul_23: "unit-",
-  //   },
-  // ];
-
   return (
     <>
-      <div className="flex bg-red-200 w-[100%] h-svh items-center gap-5 justify-center">
+      <div className="flex bg-red-200 w-[100%] items-center gap-5 justify-center">
         {/* TimePicker */}
         <div className="flex w-[50rem]">
           {/* TimeSlot */}
@@ -147,7 +99,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
 
         {/* ====================================== */}
         {/* Event Controls */}
-        {/* <div className="flex flex-col bg-yellow-200">
+        <div className="flex flex-col bg-yellow-200">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="default" className="my-4">
@@ -175,7 +127,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           <Link href="/" className="p-4 bg-blue-400">
             Return to Home Button
           </Link>
-        </div> */}
+        </div>
       </div>
     </>
   );

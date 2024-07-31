@@ -1,8 +1,11 @@
 "use client";
 
+import { ModeContext } from "@/app/theme-provider";
 import { DateData } from "@/lib/schema";
 import { calculateTimeSlotBlocks } from "@/lib/utils";
+import { use, useContext, useEffect, useState } from "react";
 import { useTableDragSelect } from "use-table-drag-select";
+import { Button } from "../ui/button";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -14,10 +17,50 @@ dayjs.extend(utc);
 22:00  [false false false],
 22:30  [false false false]
     ]
+
+
+[
+[false false false],
+[false false false],
+[false false false],
+[false false false]
+]
+
+[
+[10 100 100],
+[100 1000 100000],
+[100 1000 100000],
+[100 1000 100000]
+]
+
+Each new participant has a weight that is (num_of_participant)  * 10
+-- p1 = 10
+-- p2 = 100
+-- p3 = 1000
+-- p4 = 10000
+-- p5 = 100000
+
+Color: (in order of IF statement)
+-- weight >= 100000: darkest red
+-- weight >= 10000: dark red
+-- weight >= 1000: red
+-- weight >= 100: light red
+-- weight >= 10: lightest red
+
 */
 
 const TimeSlotDragSelector = ({ dates }: { dates: DateData[] }) => {
-  console.log("TimeSlotDragSelector dates", dates);
+  const { mode, setMode } = useContext(ModeContext);
+  useEffect(() => {
+    // setTimeout(() => {
+    //   console.log("timeout done");
+    //   setMode("write");
+    // }, 3000);
+  }, [mode, setMode]);
+
+  console.log("TimeSlotDragSelector - mode", mode);
+
+  const v: number = 0;
 
   // Header
   const dateHeaderMMMD = dates.map((date) =>
@@ -75,24 +118,39 @@ const TimeSlotDragSelector = ({ dates }: { dates: DateData[] }) => {
           ))}
         </tr>
       </thead>
-      <tbody className="flex flex-col divide-y">
-        {value.map((row, rowIndex) => (
-          <tr className="flex" key={rowIndex}>
-            {/* <th>{rowIndex + 1}</th> */}
-            {/* <th className="flex-0 w-[5rem]">{`${dayjs(dates[0].start_datetime)
-              .utc()
-              .add(30 * (rowIndex + 1), "minute")
-              .format("h:mm A")}`}</th> */}
-            {row.map((_, columnIndex) => (
-              <td
-                key={columnIndex}
-                className={`select-none flex-1 h-[2rem] border-r border-gray-200 border-dashed ${
-                  value[rowIndex][columnIndex] ? "bg-red-500" : "bg-white"
-                }`}
-              />
-            ))}
-          </tr>
-        ))}
+      <tbody className="flex flex-col divide-y  border-2 border-solid border-gray-400">
+        {value.map((row, rowIndex) =>
+          mode == "read" ? (
+            <>
+              <tr className="flex h-[1rem] bg-white" key={rowIndex}>
+                {/* <tr className="flex w-full h-[1rem]"></tr> */}
+                {/* {row.map((_, columnIndex) => (
+                  <td
+                    onClick={() => {
+                      console.log("clicked");
+                    }}
+                    key={columnIndex}
+                    className={`select-none flex-1 h-[1rem] border-r border-gray-200 border-dashed bg-white
+                  }
+          `}
+                  />
+                ))} */}
+              </tr>
+            </>
+          ) : (
+            <tr className="flex h-[1rem]" key={rowIndex}>
+              {row.map((_, columnIndex) => (
+                <td
+                  key={columnIndex}
+                  className={`select-none flex-1 border-r border-gray-200 border-dashed bg-red-500
+                     ${
+                       value[rowIndex][columnIndex] ? "bg-red-500" : "bg-white"
+                     }`}
+                />
+              ))}
+            </tr>
+          )
+        )}
       </tbody>
     </table>
   );

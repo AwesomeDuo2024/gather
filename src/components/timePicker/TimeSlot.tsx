@@ -1,6 +1,8 @@
 "use client";
 
+import { ModeContext } from "@/app/theme-provider";
 import { calculateTimeSlotBlocks } from "@/lib/utils";
+import { useContext, useEffect } from "react";
 
 // Import dayjs
 var dayjs = require("dayjs");
@@ -19,6 +21,16 @@ const TimeSlot = ({
   const numberOfSlots = calculateTimeSlotBlocks(startTime, endTime); // 4
   const diffTime = dayjs(endTime).diff(dayjs(startTime), "hour");
   const timeSlots = [];
+  const { mode, setMode } = useContext(ModeContext);
+
+  // const { mode, setMode } = useMode();
+  // console.log("TimeSlot - mode", mode);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log("timeout done");
+  //     setMode("write");
+  //   }, 3000);
+  // }, []);
 
   // console.log("TimeSlot numberOfSlots", numberOfSlots);
   // console.log("TimeSlot startTime", startTime);
@@ -38,7 +50,8 @@ const TimeSlot = ({
 
   return (
     <div className="flex flex-col flex-none mr-2">
-      <div className="h-[4rem]"></div>
+      <h1 className="text-red-500 text-lg">{mode}</h1>
+      <div className="h-[3rem]"></div>
 
       {timeSlots.map((item, ind) => (
         <div
@@ -50,7 +63,7 @@ const TimeSlot = ({
           }}
           className="text-primary-content grow place-content-top"
         >
-          <h1 className="-mt-2">{item}</h1>
+          <h1 className="text-sm">{item}</h1>
         </div>
       ))}
     </div>

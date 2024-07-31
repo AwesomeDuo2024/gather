@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { z } from "zod";
 
 export const formSchema = z.object({
@@ -27,3 +28,8 @@ export interface FetchedData {
   id: number;
   Date: DateData[];
 }
+
+export type IModeContext = {
+  mode: string;
+  setMode: Dispatch<SetStateAction<string>>;
+};
