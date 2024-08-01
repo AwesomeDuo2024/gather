@@ -50,13 +50,13 @@ Color: (in order of IF statement)
 */
 
 const TimeSlotDragSelector = ({ dates }: { dates: DateData[] }) => {
-  const { mode, setMode } = useContext(ModeContext);
+  const { mode, setMode, effect, setEffect } = useContext(ModeContext);
   useEffect(() => {
     // setTimeout(() => {
     //   console.log("timeout done");
     //   setMode("write");
     // }, 3000);
-  }, [mode, setMode]);
+  }, [mode, setMode, effect]);
 
   console.log("TimeSlotDragSelector - mode", mode);
 
@@ -122,7 +122,13 @@ const TimeSlotDragSelector = ({ dates }: { dates: DateData[] }) => {
         {value.map((row, rowIndex) =>
           mode == "read" ? (
             <>
-              <tr className="flex h-[1rem] bg-white" key={rowIndex}>
+              <tr
+                onClick={() => {
+                  effect ? setEffect(false) : setEffect(true);
+                }}
+                className="flex lg:h-[1rem] bg-white"
+                key={rowIndex}
+              >
                 {/* <tr className="flex w-full h-[1rem]"></tr> */}
                 {/* {row.map((_, columnIndex) => (
                   <td

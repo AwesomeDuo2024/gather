@@ -6,6 +6,8 @@ import { createContext, useContext, useState } from "react";
 export const ModeContext = createContext<IModeContext>({
   mode: "read",
   setMode: () => {},
+  effect: false,
+  setEffect: () => {},
 });
 
 export default function ModeProvider({
@@ -14,12 +16,11 @@ export default function ModeProvider({
   children: React.ReactNode;
 }) {
   const [mode, setMode] = useState<string>("read");
-
-  console.log("ModeProvider - mode", mode);
+  const [effect, setEffect] = useState<boolean>(false);
   // Default mode = "read" -> Mode that allows interactions with participants, etc.
   // "write" mode -> Mode that allows adding participants' availability, etc.
   return (
-    <ModeContext.Provider value={{ mode, setMode }}>
+    <ModeContext.Provider value={{ mode, setMode, effect, setEffect }}>
       {children}
     </ModeContext.Provider>
   );

@@ -49,24 +49,26 @@ const TimeSlot = ({
   // Output = ["12am", "1am", "2am"]
 
   return (
-    <div className="flex flex-col flex-none mr-2">
-      <h1 className="text-red-500 text-lg">{mode}</h1>
-      <div className="h-[3rem]"></div>
+    <>
+      <h1 className="text-red-500 text-lg w-[3rem]">{mode}</h1>
+      <div className="flex flex-col flex-none mr-2">
+        <div className="h-[1.5rem]"></div>
 
-      {timeSlots.map((item, ind) => (
-        <div
-          key={ind}
-          onClick={() => {
-            // console.log(
-            //   `clicked blocked ${item.name.slice(0, item.name.length - 2)}`
-            // );
-          }}
-          className="text-primary-content grow place-content-top"
-        >
-          <h1 className="text-sm">{item}</h1>
-        </div>
-      ))}
-    </div>
+        {timeSlots.map((item, ind) => (
+          <div
+            key={ind}
+            onClick={() => {
+              // console.log(
+              //   `clicked blocked ${item.name.slice(0, item.name.length - 2)}`
+              // );
+            }}
+            className="text-primary-content grow place-content-top"
+          >
+            <h1 className="text-sm">{item}</h1>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 

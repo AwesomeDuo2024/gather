@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Pencil, Trash } from "lucide-react";
 import { deleteUserAndAvailabilities } from "@/lib/actions";
 import {
@@ -22,21 +22,27 @@ const Respondents = ({
 }: {
   respondentsData: { name: string; user_id: number }[] | null;
 }) => {
-  const { mode, setMode } = useContext(ModeContext);
+  const { mode, setMode, effect, setEffect } = useContext(ModeContext);
   const sortedRespondents = respondentsData?.sort((a, b) =>
     a.name.localeCompare(b.name)
   );
   const [currentRespondents, setCurrentRespondents] =
     useState(sortedRespondents);
 
+  useEffect(() => {
+    if (mode == "read") {
+      console.log("Respondents - effect has changed", effect);
+    }
+  }, [effect]);
+  console.log("Respondents - re-rendering");
   return (
     <>
       <Button
-        variant="default"
-        className="my-4"
+        key={crypto.randomUUID()}
+        className={`my-4 animate-bounce-awhile`}
         onClick={() => {
           console.log("Clicked add availability");
-          setMode("write");
+          mode == "read" ? setMode("write") : setMode("read");
         }}
       >
         Add availability
