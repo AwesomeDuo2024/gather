@@ -124,7 +124,7 @@ const TimeSlotDragSelector = ({ dates }: { dates: DateData[] }) => {
             <>
               <tr
                 onClick={() => {
-                  effect ? setEffect(false) : setEffect(true);
+                  setEffect(crypto.randomUUID());
                 }}
                 className="flex lg:h-[1rem] bg-white"
                 key={rowIndex}

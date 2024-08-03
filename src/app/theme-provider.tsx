@@ -6,7 +6,7 @@ import { createContext, useContext, useState } from "react";
 export const ModeContext = createContext<IModeContext>({
   mode: "read",
   setMode: () => {},
-  effect: false,
+  effect: "",
   setEffect: () => {},
 });
 
@@ -16,7 +16,7 @@ export default function ModeProvider({
   children: React.ReactNode;
 }) {
   const [mode, setMode] = useState<string>("read");
-  const [effect, setEffect] = useState<boolean>(false);
+  const [effect, setEffect] = useState<string>("");
   // Default mode = "read" -> Mode that allows interactions with participants, etc.
   // "write" mode -> Mode that allows adding participants' availability, etc.
   return (

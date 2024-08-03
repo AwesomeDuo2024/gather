@@ -32,6 +32,8 @@ export interface FetchedData {
 export type IModeContext = {
   mode: string;
   setMode: Dispatch<SetStateAction<string>>;
-  effect: boolean;
-  setEffect: Dispatch<SetStateAction<boolean>>;
+  // effect: boolean;
+  // setEffect: Dispatch<SetStateAction<boolean>>;
+  effect: string;
+  setEffect: Dispatch<SetStateAction<string>>;
 };

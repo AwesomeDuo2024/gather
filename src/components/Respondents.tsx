@@ -38,7 +38,7 @@ const Respondents = ({
   return (
     <>
       <Button
-        key={crypto.randomUUID()}
+        key={effect}
         className={`my-4 animate-bounce-awhile`}
         onClick={() => {
           console.log("Clicked add availability");
