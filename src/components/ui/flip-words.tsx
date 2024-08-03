@@ -1,14 +1,7 @@
 "use client";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, LayoutGroup } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { ModeContext } from "@/app/theme-provider";
 
 export const FlipWords = ({
   words,
@@ -19,9 +12,6 @@ export const FlipWords = ({
   duration?: number;
   className?: string;
 }) => {
-  // Context
-  // const { mode, setMode } = useContext(ModeContext);
-
   const [currentWord, setCurrentWord] = useState(words[0]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
 

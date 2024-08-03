@@ -6,6 +6,7 @@ import { calculateTimeSlotBlocks } from "@/lib/utils";
 import { use, useContext, useEffect, useState } from "react";
 import { useTableDragSelect } from "use-table-drag-select";
 import { Button } from "../ui/button";
+import Respondents from "../Respondents";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -49,88 +50,74 @@ Color: (in order of IF statement)
 
 */
 
-const TimeSlotDragSelector = ({ dates }: { dates: DateData[] }) => {
+const TimeSlotDragSelector = ({
+  body,
+  dateHeaderDDD,
+  dateHeaderMMMD,
+  respondentsData,
+}: {
+  body: boolean[][];
+  dateHeaderDDD: string[];
+  dateHeaderMMMD: string[];
+  respondentsData: { name: string; user_id: number }[] | null;
+}) => {
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
+  const [ref, value] = useTableDragSelect(body);
   useEffect(() => {
     // setTimeout(() => {
     //   console.log("timeout done");
     //   setMode("write");
     // }, 3000);
   }, [mode, setMode, effect]);
-
-  console.log("TimeSlotDragSelector - mode", mode);
-
-  const v: number = 0;
-
-  // Header
-  const dateHeaderMMMD = dates.map((date) =>
-    dayjs(date.start_datetime).utc().format("MMM D")
-  );
-  const dateHeaderDDD = dates.map((date) =>
-    dayjs(date.start_datetime).utc().format("ddd")
-  );
-
-  console.log("TimeSlotDragSelector dateHeaderMMMD", dateHeaderMMMD);
-
-  // Body of Array
-  // Column
-  const columnCount = dateHeaderMMMD.length;
-
-  // Row
-  const rowCount = calculateTimeSlotBlocks(
-    dates[0].start_datetime,
-    dates[0].end_datetime
-  );
-
-  const body: boolean[][] = [];
-  const temp: boolean[] = [];
-  for (let i = 0; i < columnCount; i++) {
-    temp.push(false);
-  }
-
-  for (let i = 0; i < rowCount; i++) {
-    body.push(temp);
-  }
-
-  console.log("TimeSlotDragSelector - body", body);
-  const [ref, value] = useTableDragSelect(body);
+  const [name, setName] = useState<string>("");
+  const updateName = (newName: string) => {
+    setName(newName);
+  };
+  console.log("TimeSlotDragSelector - name", name);
 
   console.log("TimeSlotDragSelector value", value);
   console.log("TimeSlotDragSelector ref", ref);
 
   return (
-    <table ref={ref} className="flex flex-col w-[50rem]">
-      <thead className="flex flex-col items-stretch">
-        <tr className="flex">
-          <th></th>
-          {dateHeaderMMMD.map((date, ind) => (
-            <th className="flex-1" key={ind}>
-              {date}
-            </th>
-          ))}
-        </tr>
-        <tr className="flex">
-          <th></th>
-          {dateHeaderDDD.map((date, ind) => (
-            <th className="flex-1" key={ind}>
-              {date}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="flex flex-col divide-y  border-2 border-solid border-gray-400">
-        {value.map((row, rowIndex) =>
-          mode == "read" ? (
-            <>
-              <tr
-                onClick={() => {
-                  setEffect(crypto.randomUUID());
-                }}
-                className="flex lg:h-[1rem] bg-white"
-                key={rowIndex}
-              >
-                {/* <tr className="flex w-full h-[1rem]"></tr> */}
-                {/* {row.map((_, columnIndex) => (
+    <div className="flex ">
+      <Respondents
+        respondentsData={respondentsData}
+        updateName={updateName}
+        timeSlots={value}
+      />
+
+      <table ref={ref} className="flex flex-col w-[50rem] order-1">
+        <thead className="flex flex-col items-stretch">
+          <tr className="flex">
+            <th></th>
+            {dateHeaderMMMD.map((date, ind) => (
+              <th className="flex-1" key={ind}>
+                {date}
+              </th>
+            ))}
+          </tr>
+          <tr className="flex">
+            <th></th>
+            {dateHeaderDDD.map((date, ind) => (
+              <th className="flex-1" key={ind}>
+                {date}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="flex flex-col divide-y  border-2 border-solid border-gray-400">
+          {value.map((row, rowIndex) =>
+            mode == "read" ? (
+              <>
+                <tr
+                  onClick={() => {
+                    setEffect(crypto.randomUUID());
+                  }}
+                  className="flex lg:h-[1rem] bg-white"
+                  key={rowIndex}
+                >
+                  {/* <tr className="flex w-full h-[1rem]"></tr> */}
+                  {/* {row.map((_, columnIndex) => (
                   <td
                     onClick={() => {
                       console.log("clicked");
@@ -141,24 +128,27 @@ const TimeSlotDragSelector = ({ dates }: { dates: DateData[] }) => {
           `}
                   />
                 ))} */}
-              </tr>
-            </>
-          ) : (
-            <tr className="flex h-[1rem]" key={rowIndex}>
-              {row.map((_, columnIndex) => (
-                <td
-                  key={columnIndex}
-                  className={`select-none flex-1 border-r border-gray-200 border-dashed bg-red-500
+                </tr>
+              </>
+            ) : (
+              <tr className="flex h-[1rem]" key={rowIndex}>
+                {row.map((_, columnIndex) => (
+                  <td
+                    key={columnIndex}
+                    className={`select-none flex-1 border-r border-gray-200 border-dashed bg-red-500
                      ${
-                       value[rowIndex][columnIndex] ? "bg-red-500" : "bg-white"
+                       value[rowIndex][columnIndex]
+                         ? "bg-red-500"
+                         : "bg-red-300"
                      }`}
-                />
-              ))}
-            </tr>
-          )
-        )}
-      </tbody>
-    </table>
+                  />
+                ))}
+              </tr>
+            )
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

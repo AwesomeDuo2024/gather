@@ -1,7 +1,7 @@
 "use client";
 
 import { IModeContext } from "@/lib/schema";
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 
 export const ModeContext = createContext<IModeContext>({
   mode: "read",

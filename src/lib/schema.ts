@@ -11,6 +11,12 @@ export const formSchema = z.object({
   dates: z.array(z.date()).nonempty({ message: "Select dates for event" }),
 });
 
+export const nameSchema = z.object({
+  name: z.string().min(1, {
+    message: "Name is required",
+  }),
+});
+
 export type EventData = {
   eventName: string;
   start: string;
@@ -32,8 +38,6 @@ export interface FetchedData {
 export type IModeContext = {
   mode: string;
   setMode: Dispatch<SetStateAction<string>>;
-  // effect: boolean;
-  // setEffect: Dispatch<SetStateAction<boolean>>;
   effect: string;
   setEffect: Dispatch<SetStateAction<string>>;
 };

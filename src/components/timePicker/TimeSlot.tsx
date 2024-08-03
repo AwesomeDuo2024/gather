@@ -23,20 +23,15 @@ const TimeSlot = ({
   const timeSlots = [];
   const { mode, setMode } = useContext(ModeContext);
 
-  // const { mode, setMode } = useMode();
-  // console.log("TimeSlot - mode", mode);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log("timeout done");
-  //     setMode("write");
-  //   }, 3000);
-  // }, []);
+  /*
+[ Jul 30 |Aug 2 |Aug 3
+  [false, false, false], 
+  [false, false, false],
+  [false, false, false],
+  [false, false, false]
+]
 
-  // console.log("TimeSlot numberOfSlots", numberOfSlots);
-  // console.log("TimeSlot startTime", startTime);
-  // console.log("TimeSlot interval", interval);
-  // console.log("TimeSlot diffTime", diffTime);
-  // Start time = 2024-07-28T00:00:00+00:00
+*/
 
   // Parse the start time
   // 2024-07-28T00:00:00+00:00 -> 00:00:00
@@ -47,12 +42,15 @@ const TimeSlot = ({
   console.log("TimeSlot parsedSlots", timeSlots);
 
   // Output = ["12am", "1am", "2am"]
-
+  {
+    /* <button className="px-6 py-2 bg-black text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
+  Figma
+</button> */
+  }
   return (
     <>
-      <h1 className="text-red-500 text-lg w-[3rem]">{mode}</h1>
       <div className="flex flex-col flex-none mr-2">
-        <div className="h-[1.5rem]"></div>
+        <div className="h-[3rem]"></div>
 
         {timeSlots.map((item, ind) => (
           <div

@@ -16,11 +16,39 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ModeContext } from "@/app/theme-provider";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { nameSchema } from "@/lib/schema";
+import { z } from "zod";
+import { toast } from "./ui/use-toast";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 const Respondents = ({
+  updateName,
   respondentsData,
+  timeSlots,
 }: {
+  updateName(newName: string): void;
   respondentsData: { name: string; user_id: number }[] | null;
+  timeSlots: boolean[][];
 }) => {
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
   const sortedRespondents = respondentsData?.sort((a, b) =>
@@ -29,24 +57,142 @@ const Respondents = ({
   const [currentRespondents, setCurrentRespondents] =
     useState(sortedRespondents);
 
-  useEffect(() => {
-    if (mode == "read") {
-      console.log("Respondents - effect has changed", effect);
-    }
-  }, [effect]);
-  console.log("Respondents - re-rendering");
+  console.log("Respondents - timeslots", timeSlots);
+
+  // useEffect(() => {
+  //   if (mode == "read") {
+  //     console.log("Respondents - effect has changed", effect);
+  //   }
+  // }, [effect]);
+  // console.log("Respondents - re-rendering");
+
+  const form = useForm<z.infer<typeof nameSchema>>({
+    resolver: zodResolver(nameSchema),
+    defaultValues: {
+      name: "",
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof nameSchema>) {
+    console.log("onSubmit", data);
+    updateName(data.name);
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+    setMode("read");
+    form.reset({ name: "" });
+  }
+
   return (
-    <>
-      <Button
-        key={effect}
-        className={`my-4 animate-bounce-awhile`}
-        onClick={() => {
-          console.log("Clicked add availability");
-          mode == "read" ? setMode("write") : setMode("read");
-        }}
-      >
-        Add availability
-      </Button>
+    <div className="order-2">
+      {mode == "write" && (
+        <div className="flex gap-1 my-4">
+          {/* Cancel Button*/}
+          <Button
+            variant="outline"
+            key={effect}
+            className={`flex-1 text-red-500 border-red-500 hover:bg-red-100 hover:text-red-500`}
+            onClick={() => {
+              console.log("Clicked add availability");
+              setMode("read");
+            }}
+          >
+            Cancel
+          </Button>
+          {/* <NameDialog /> */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="default"
+                className="flex-1 text-white bg-green-600 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+              >
+                Save
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[20rem] max-h-[90%] justify-center flex flex-col">
+              <DialogHeader>
+                <DialogTitle className="mb-2">
+                  Enter your name to continue{" "}
+                </DialogTitle>
+              </DialogHeader>
+
+              {/* =========== Name Form ========== */}
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="w-2/3 space-y-6 min-w-[100%] flex flex-col items-end"
+                >
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field, fieldState, formState }) =>
+                      fieldState.invalid ? (
+                        <FormItem className="w-[100%]">
+                          <FormControl>
+                            <Input
+                              className="border-red-500 border-2 focus-visible:ring-0 focus-visible:ring-offset-0"
+                              placeholder="Eg: Jack, Bobby..."
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      ) : (
+                        <FormItem className="w-[100%] focus:outline-none">
+                          <FormControl className="focus:outline-none">
+                            <Input
+                              className="border-gray-500 border-2 focus-visible:ring-0 focus-visible:ring-offset-0"
+                              placeholder="Eg: Jack, Bobby..."
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )
+                    }
+                  />
+                  {/* === !Dialog - Custom Close button to clear form content when closing dialog ===*/}
+                  <DialogFooter className="sm:justify-start">
+                    <DialogClose asChild>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        onClick={() => form.reset({ name: "" })}
+                      >
+                        Close
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      type="submit"
+                      variant="default"
+                      className="flex-1 text-white bg-green-600 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+                    >
+                      Continue
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
+      {mode == "read" && (
+        <Button
+          key={effect}
+          className={`my-4 animate-bounce-awhile`}
+          onClick={() => {
+            console.log("Clicked add availability");
+            mode == "read" ? setMode("write") : setMode("read");
+          }}
+        >
+          Add availability
+        </Button>
+      )}
       <p>Respondents:</p>
       {currentRespondents?.map((respondent) => {
         const { name, user_id: userId } = respondent;
@@ -108,7 +254,7 @@ const Respondents = ({
           </div>
         );
       })}
-    </>
+    </div>
   );
 };
 export default Respondents;

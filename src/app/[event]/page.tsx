@@ -33,6 +33,8 @@ import { useContext } from "react";
 import { ModeContext } from "../theme-provider";
 
 var dayjs = require("dayjs");
+var utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
 
 const EventPage = async ({ params }: { params: { event: string } }) => {
   // in URL = http://localhost:3000/6f35722e-1cc1-4448-a5e5-bcb77b9f8c8f
@@ -58,8 +60,6 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
 
   const endTime = data![0].Date[0].end_datetime;
   const startTime = data![0].Date[0].start_datetime;
-  // const duration_end_datetime = dayjs(end_datetime).duration();
-  // const duration_start_datetime = dayjs(start_datetime);
 
   // Extract event id from fetched data
   const currentEventId = data && data[0]?.id;
@@ -84,6 +84,41 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   // const timeSlots = calculateTimeSlotBlocks(startTime, endTime);
   // console.log("EventPage timeSlots", timeSlots);
 
+  // const [name, setName] = useState<string>("");
+
+  // ============= Calculate time slots ============= //
+  // Header
+  const dateHeaderMMMD = dates.map((date) =>
+    dayjs(date.start_datetime).utc().format("MMM D")
+  );
+  const dateHeaderDDD = dates.map((date) =>
+    dayjs(date.start_datetime).utc().format("ddd")
+  );
+
+  console.log("TimeSlotDragSelector dateHeaderMMMD", dateHeaderMMMD);
+
+  // Body of Array
+  // Column
+  const columnCount = dateHeaderMMMD.length;
+
+  // Row
+  const rowCount = calculateTimeSlotBlocks(
+    dates[0].start_datetime,
+    dates[0].end_datetime
+  );
+
+  const body: boolean[][] = [];
+  const temp: boolean[] = [];
+  for (let i = 0; i < columnCount; i++) {
+    temp.push(false);
+  }
+
+  for (let i = 0; i < rowCount; i++) {
+    body.push(temp);
+  }
+
+  console.log("Event Page - body", body);
+
   return (
     <>
       <div className="flex bg-red-200 w-[100%] items-center gap-5 justify-center">
@@ -94,12 +129,18 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           <TimeSlot startTime={startTime} endTime={endTime} interval={30} />
           {/* <TimeSlotBigBlockCellSelection columns={columns} data={t_data} /> */}
           {/* <TimeSlotBigBlock dates={dates}></TimeSlotBigBlock> */}
-          <TimeSlotDragSelector dates={dates} />
+          <TimeSlotDragSelector
+            respondentsData={respondentsData}
+            body={body}
+            dateHeaderDDD={dateHeaderDDD}
+            dateHeaderMMMD={dateHeaderMMMD}
+          />
+          {/* <TimeSlotDragSelector dates={dates} /> */}
         </div>
 
         {/* ====================================== */}
         {/* Event Controls */}
-        <div className="flex flex-col bg-yellow-200">
+        {/* <div className="flex flex-col bg-yellow-200">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="default" className="my-4">
@@ -127,7 +168,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           <Link href="/" className="p-4 bg-blue-400">
             Return to Home Button
           </Link>
-        </div>
+        </div> */}
       </div>
     </>
   );
