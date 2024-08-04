@@ -50,6 +50,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
     )
     .eq("event_link", params.event);
 
+  console.log("EventPage");
   console.log("EventPage data", data);
 
   const dates = data![0].Date.sort(
@@ -107,17 +108,19 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
     dates[0].end_datetime
   );
 
-  const body: boolean[][] = [];
+  const readModeBody: boolean[][] = [];
+  const writeModeBody: boolean[][] = [];
   const temp: boolean[] = [];
   for (let i = 0; i < columnCount; i++) {
     temp.push(false);
   }
 
   for (let i = 0; i < rowCount; i++) {
-    body.push(temp);
+    readModeBody.push(temp);
+    writeModeBody.push(temp);
   }
 
-  console.log("Event Page - body", body);
+  // console.log("Event Page - body", body);
 
   return (
     <>
@@ -130,8 +133,10 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           {/* <TimeSlotBigBlockCellSelection columns={columns} data={t_data} /> */}
           {/* <TimeSlotBigBlock dates={dates}></TimeSlotBigBlock> */}
           <TimeSlotDragSelector
+            eventId={currentEventId}
             respondentsData={respondentsData}
-            body={body}
+            readModeBody={readModeBody}
+            writeModeBody={writeModeBody}
             dateHeaderDDD={dateHeaderDDD}
             dateHeaderMMMD={dateHeaderMMMD}
           />

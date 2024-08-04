@@ -35,6 +35,15 @@ export interface FetchedData {
   Date: DateData[];
 }
 
+export type CreateUserResponseType = {
+  user_id: number;
+  name: string;
+  email: null | string;
+  created_at: string;
+  updated_at: string;
+  event_id: number;
+}[];
+
 export type IModeContext = {
   mode: string;
   setMode: Dispatch<SetStateAction<string>>;

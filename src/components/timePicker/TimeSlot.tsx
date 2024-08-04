@@ -23,16 +23,6 @@ const TimeSlot = ({
   const timeSlots = [];
   const { mode, setMode } = useContext(ModeContext);
 
-  /*
-[ Jul 30 |Aug 2 |Aug 3
-  [false, false, false], 
-  [false, false, false],
-  [false, false, false],
-  [false, false, false]
-]
-
-*/
-
   // Parse the start time
   // 2024-07-28T00:00:00+00:00 -> 00:00:00
   for (let i = 0; i < diffTime; ++i) {
