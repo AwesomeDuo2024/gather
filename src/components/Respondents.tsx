@@ -35,10 +35,8 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { nameSchema } from "@/lib/schema";
@@ -48,33 +46,17 @@ import { DialogClose } from "@radix-ui/react-dialog";
 
 const Respondents = ({
   eventId,
-  updateName,
-  updateReadColor,
   respondentsData,
-  timeSlots,
 }: {
-  updateSlots(newSlots: boolean[][]): void;
-  eventId: number;
-  updateName(newName: string): void;
-  updateReadColor(newName: string): void;
+  eventId: string;
   respondentsData: { name: string; user_id: number }[] | null;
-  timeSlots: boolean[][];
 }) => {
+  // Returns a alphabeticall sorted list of respondents' names
   const sortedRespondents = respondentsData?.sort((a, b) =>
     a.name.localeCompare(b.name)
   );
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-  const [isFetching, setIsFetching] = useState(false);
-  const [currentRespondents, setCurrentRespondents] =
-    useState(sortedRespondents);
-
-  useEffect(() => {
-    router.refresh();
-    console.log("effect changed");
-    console.log(mode);
-  }, [currentRespondents, router, effect]);
 
   const form = useForm<z.infer<typeof nameSchema>>({
     resolver: zodResolver(nameSchema),
@@ -83,9 +65,8 @@ const Respondents = ({
     },
   });
 
-  function onSubmit(data: z.infer<typeof nameSchema>) {
+  const onSubmit = async (data: z.infer<typeof nameSchema>) => {
     console.log("onSubmit", data);
-    updateName(data.name);
     toast({
       title: "You submitted the following values:",
       description: (
@@ -94,32 +75,17 @@ const Respondents = ({
         </pre>
       ),
     });
-    createUser(data.name, eventId)
-      .then((userData) => {
-        createAvailability(timeSlots, userData.data![0].user_id).then(
-          (availabilityData) => {
-            form.reset({ name: "" });
-            setMode("read");
-            setCurrentRespondents((prev) => [
-              ...prev!,
-              {
-                name: userData.data![0].name,
-                user_id: userData.data![0].user_id,
-              },
-            ]);
-            updateReadColor("bg-red-500");
-            updateSlots(availabilityData.data![0].timeslots); // boolean[][]
-          }
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    // startTransition(() => {
-    //   router.refresh();
-    // });
-  }
+    const createdUser = await createUser(data.name, eventId);
+    console.log("createdUser", createdUser);
+    if (createdUser != "") {
+      //1. Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
+      router.refresh();
+      //2. Toggle to read mode (default)
+      setMode("read");
+      //3. Reset form input field
+      form.reset({ name: "" });
+    }
+  };
 
   return (
     <div className="order-2">
@@ -227,7 +193,9 @@ const Respondents = ({
             Add availability
           </Button>
           <p>Respondents:</p>
-          {currentRespondents?.map((respondent) => {
+
+          {/* === Display Respondents === */}
+          {sortedRespondents?.map((respondent) => {
             const { name, user_id: userId } = respondent;
             return (
               <div
@@ -271,11 +239,8 @@ const Respondents = ({
                           className="bg-red-600 hover:bg-red-700"
                           onClick={() => {
                             deleteUserAndAvailabilities(userId);
-                            setCurrentRespondents((prev) =>
-                              prev!.filter(
-                                (respondent) => respondent.user_id !== userId
-                              )
-                            );
+                            // Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
+                            router.refresh();
                           }}
                         >
                           Remove

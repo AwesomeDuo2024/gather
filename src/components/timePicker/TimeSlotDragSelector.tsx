@@ -10,6 +10,7 @@ import Respondents from "../Respondents";
 import ReadTimeSlot from "./WriteTimePicker";
 import WriteTimePicker from "./WriteTimePicker";
 import ReadTimePicker from "./ReadTimePicker";
+import { useRouter } from "next/navigation";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -58,8 +59,6 @@ Color: (in order of IF statement)
   [false, false, false],
   [false, false, false]
 ]
-
-
 */
 
 const TimeSlotDragSelector = ({
@@ -77,23 +76,26 @@ const TimeSlotDragSelector = ({
   dateHeaderMMMD: string[];
   respondentsData: { name: string; user_id: number }[] | null;
 }) => {
+  console.log("==========TimeSlotDragSelector================");
+
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
 
   const [ref, value] = useTableDragSelect(writeModeBody);
   const [readColor, setReadColor] = useState("bg-white");
+  const [name, setName] = useState<string>("");
+
   const updateReadColor = (newColor: string) => {
     setReadColor(newColor);
   };
+
   const updateSlots = (newSlots: boolean[][]) => {};
-  useEffect(() => {
-    console.log("added availabilities");
-  }, [mode, setMode, effect]);
-  const [name, setName] = useState<string>("");
+
   const updateName = (newName: string) => {
     setName(newName);
   };
 
-  console.log("TimeSlotDragSelector - value");
+  console.log("TimeSlotDragSelector renders");
+  console.log("TimeSlotDragSelector - respondentsData", respondentsData);
 
   return (
     <div className="flex">
@@ -105,14 +107,6 @@ const TimeSlotDragSelector = ({
             dateHeaderDDD={dateHeaderDDD}
             dateHeaderMMMD={dateHeaderMMMD}
           />
-          <Respondents
-            updateSlots={updateSlots}
-            updateReadColor={updateReadColor}
-            eventId={eventId}
-            respondentsData={respondentsData}
-            updateName={updateName}
-            timeSlots={value}
-          />
         </>
       )}
       {mode == "write" && (
@@ -122,16 +116,16 @@ const TimeSlotDragSelector = ({
             dateHeaderDDD={dateHeaderDDD}
             dateHeaderMMMD={dateHeaderMMMD}
           />
-          <Respondents
-            updateSlots={updateSlots}
-            updateReadColor={updateReadColor}
-            eventId={eventId}
-            respondentsData={respondentsData}
-            updateName={updateName}
-            timeSlots={value}
-          />
         </>
       )}
+      <Respondents
+        updateSlots={updateSlots}
+        updateReadColor={updateReadColor}
+        eventId={eventId}
+        respondentsData={respondentsData}
+        updateName={updateName}
+        timeSlots={value}
+      />
     </div>
   );
 };

@@ -12,16 +12,13 @@ dayjs.extend(utc);
 const TimeSlot = ({
   startTime,
   endTime,
-  interval,
 }: {
   startTime: string; // 2024-07-28T00:00:00+00:00
   endTime: string;
-  interval: number; //30
 }) => {
   const numberOfSlots = calculateTimeSlotBlocks(startTime, endTime); // 4
   const diffTime = dayjs(endTime).diff(dayjs(startTime), "hour");
   const timeSlots = [];
-  const { mode, setMode } = useContext(ModeContext);
 
   // Parse the start time
   // 2024-07-28T00:00:00+00:00 -> 00:00:00
@@ -29,14 +26,6 @@ const TimeSlot = ({
     timeSlots.push(dayjs(startTime).utc().add(i, "hour").format("h A"));
   }
 
-  console.log("TimeSlot parsedSlots", timeSlots);
-
-  // Output = ["12am", "1am", "2am"]
-  {
-    /* <button className="px-6 py-2 bg-black text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
-  Figma
-</button> */
-  }
   return (
     <>
       <div className="flex flex-col flex-none mr-2">
@@ -45,11 +34,7 @@ const TimeSlot = ({
         {timeSlots.map((item, ind) => (
           <div
             key={ind}
-            onClick={() => {
-              // console.log(
-              //   `clicked blocked ${item.name.slice(0, item.name.length - 2)}`
-              // );
-            }}
+            onClick={() => {}}
             className="text-primary-content grow place-content-top"
           >
             <h1 className="text-sm">{item}</h1>
@@ -61,40 +46,3 @@ const TimeSlot = ({
 };
 
 export default TimeSlot;
-/*
-{
-
-}
-
-*/
-
-/*
-[
-  {
-  user: "Bobby",
-  timeslots: {
-    {
-      "9am": true,
-      "9:30am":false,
-      "10am": false,
-    },
-  }
-]
-
-"Bobby": {
-  {
-    "9am": true,
-    "9:30am":false,
-    "10am": false,
-  },
-"WR": {
-    "9am": true,
-    "9:30am":false,
-    "10am": false,
-  },
-}
-
-]
-
-
-*/

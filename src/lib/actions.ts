@@ -121,7 +121,7 @@ interface User {
 //   user_id?: number | null;
 // }
 
-export async function createUser(respondentName: string, eventId: number) {
+export async function createUser(respondentName: string, eventId: string) {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("User")
@@ -130,6 +130,7 @@ export async function createUser(respondentName: string, eventId: number) {
 
   if (error) {
     console.error("Error creating user", error);
+    return "";
   }
   return { data };
 }
@@ -146,6 +147,7 @@ export async function createAvailability(
 
   if (error) {
     console.error("Error creating user", error);
+    return "";
   }
   return { data };
 }

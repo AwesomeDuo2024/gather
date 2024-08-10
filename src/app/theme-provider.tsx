@@ -1,7 +1,8 @@
 "use client";
 
 import { IModeContext } from "@/lib/schema";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export const ModeContext = createContext<IModeContext>({
   mode: "read",
@@ -15,8 +16,10 @@ export default function ModeProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const [mode, setMode] = useState<string>("read");
   const [effect, setEffect] = useState<string>("");
+
   // Default mode = "read" -> Mode that allows interactions with participants, etc.
   // "write" mode -> Mode that allows adding participants' availability, etc.
   return (

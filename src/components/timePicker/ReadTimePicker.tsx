@@ -17,12 +17,9 @@ const ReadTimePicker = ({
   const [readRef, readValue] = useTableDragSelect(readModeBody);
   const [readSlots, setReadSlots] = useState<boolean[][]>(readValue);
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
-  console.log("ReadTimePicker readValue", readValue);
-  console.log("ReadTimePicker readSlots", readSlots);
+  // console.log("ReadTimePicker readValue", readValue);
+  // console.log("ReadTimePicker readSlots", readSlots);
 
-  // const updateReadSlots = (newReadSlots: boolean[][]) => {
-  //   setReadSlots([...newReadSlots]);
-  // };
   useEffect(() => {
     setReadSlots([
       [true, true, true],

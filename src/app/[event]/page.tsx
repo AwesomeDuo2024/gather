@@ -1,17 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/app/utils/supabase/server";
-import { Button } from "@/components/ui/button";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import UpdateEventForm from "@/components/eventform/UpdateEventForm";
 import {
   getCurrentEventName,
   getCurrentEventStartTime,
@@ -20,17 +9,20 @@ import {
   calculateTimeSlotBlocks,
 } from "@/lib/utils";
 import { FetchedData } from "@/lib/schema";
+import TimeSlot from "@/components/timePicker/TimeSlot";
+import { DateData } from "@/lib/schema";
+import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
+import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import UpdateEventForm from "@/components/eventform/UpdateEventForm";
 import ClipboardButton from "@/components/ClipboardButton";
 import Respondents from "@/components/Respondents";
-import TimeSlot from "@/components/timePicker/TimeSlot";
-import { start } from "repl";
-import TimeSlotBlock from "@/components/timePicker/TimeSlotBlock";
-import { DateData } from "@/lib/schema";
-import TimeSlotBigBlock from "@/components/timePicker/TimeSlotBigBlock";
-import TimeSlotBigBlockCellSelection from "@/components/timePicker/TimeSlotBigBlockCellSelection";
-import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
-import { useContext } from "react";
-import { ModeContext } from "../theme-provider";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -42,7 +34,6 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
 
   // Fetch data from Supabase
   const supabase = createClient();
-
   const { data, error } = await supabase
     .from("Event")
     .select(
@@ -50,14 +41,15 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
     )
     .eq("event_link", params.event);
 
-  console.log("EventPage");
-  console.log("EventPage data", data);
+  if (error) {
+    console.error("Error fetching data from Supabase", error);
+  } else {
+    console.log("EventPage data - ", JSON.stringify(data));
+  }
 
   const dates = data![0].Date.sort(
     (a, b) => dayjs(a.start_datetime) - dayjs(b.start_datetime)
   ) as DateData[];
-
-  console.log("EventPage date", dates);
 
   const endTime = data![0].Date[0].end_datetime;
   const startTime = data![0].Date[0].start_datetime;
@@ -96,7 +88,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
     dayjs(date.start_datetime).utc().format("ddd")
   );
 
-  console.log("TimeSlotDragSelector dateHeaderMMMD", dateHeaderMMMD);
+  // console.log("TimeSlotDragSelector dateHeaderMMMD", dateHeaderMMMD);
 
   // Body of Array
   // Column
@@ -120,18 +112,14 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
     writeModeBody.push(temp);
   }
 
-  // console.log("Event Page - body", body);
-
   return (
     <>
       <div className="flex bg-red-200 w-[100%] items-center gap-5 justify-center">
         {/* TimePicker */}
         <div className="flex w-[50rem]">
           {/* TimeSlot */}
+          <TimeSlot startTime={startTime} endTime={endTime} />
           {/* Time */}
-          <TimeSlot startTime={startTime} endTime={endTime} interval={30} />
-          {/* <TimeSlotBigBlockCellSelection columns={columns} data={t_data} /> */}
-          {/* <TimeSlotBigBlock dates={dates}></TimeSlotBigBlock> */}
           <TimeSlotDragSelector
             eventId={currentEventId}
             respondentsData={respondentsData}
@@ -140,11 +128,12 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
             dateHeaderDDD={dateHeaderDDD}
             dateHeaderMMMD={dateHeaderMMMD}
           />
-          {/* <TimeSlotDragSelector dates={dates} /> */}
+          <Respondents
+            eventId={params.event}
+            respondentsData={respondentsData}
+          />
         </div>
 
-        {/* ====================================== */}
-        {/* Event Controls */}
         {/* <div className="flex flex-col bg-yellow-200">
           <Dialog>
             <DialogTrigger asChild>
