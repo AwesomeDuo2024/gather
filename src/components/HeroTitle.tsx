@@ -4,7 +4,7 @@ export function HeroTitle() {
   const words = ["simple", "sleek", "modern", "effortless"];
 
   return (
-    <div className="h-[16rem] flex justify-center items-center flex-col lg:px-20 lg:-mt-36">
+    <div className="h-[16rem] flex justify-center items-center flex-col lg:-mt-36">
       <div className="text-4xl lg:text-5xl mx-auto font-medium text-center text-white">
         Scheduling made<br />
         <FlipWords words={words} className="mt-2 lg:mt-4 text-violet-400" /> <br />
