@@ -12,16 +12,6 @@ import { FetchedData } from "@/lib/schema";
 import TimeSlot from "@/components/timePicker/TimeSlot";
 import { DateData } from "@/lib/schema";
 import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import UpdateEventForm from "@/components/eventform/UpdateEventForm";
-import ClipboardButton from "@/components/ClipboardButton";
 import Respondents from "@/components/Respondents";
 
 var dayjs = require("dayjs");
@@ -37,22 +27,30 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   const { data, error } = await supabase
     .from("Event")
     .select(
-      `event_name, id, Date (start_datetime, end_datetime), User (user_id, name)`
+      `event_name, id, Date (start_datetime, end_datetime), User (user_id, name), Availability (availability_id, user_id, timeslots)`
     )
     .eq("event_link", params.event);
 
   if (error) {
     console.error("Error fetching data from Supabase", error);
   } else {
-    console.log("EventPage data - ", JSON.stringify(data));
+    console.log("EventPage Date - ", JSON.stringify(data));
   }
-
-  const dates = data![0].Date.sort(
-    (a, b) => dayjs(a.start_datetime) - dayjs(b.start_datetime)
-  ) as DateData[];
-
-  const endTime = data![0].Date[0].end_datetime;
-  const startTime = data![0].Date[0].start_datetime;
+  var dates: DateData[] | undefined;
+  try {
+    dates = data![0].Date.sort(
+      (a, b) => dayjs(a.start_datetime) - dayjs(b.start_datetime)
+    );
+  } catch (err) {
+    if (err instanceof TypeError) {
+      console.error("Error fetching data from Supabase", err);
+    }
+  }
+  const endTime = dates?.[0].end_datetime;
+  const startTime = dates?.[0].start_datetime;
+  const { Availability } = data?.[0];
+  const availabilities = Availability;
+  console.log("availabilities", availabilities);
 
   // Extract event id from fetched data
   const currentEventId = data && data[0]?.id;
@@ -74,63 +72,23 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   const respondentsData = data && data[0].User;
   console.log("EventPage - respondentsData", respondentsData);
 
-  // const timeSlots = calculateTimeSlotBlocks(startTime, endTime);
-  // console.log("EventPage timeSlots", timeSlots);
-
-  // const [name, setName] = useState<string>("");
-
-  // ============= Calculate time slots ============= //
-  // Header
-  const dateHeaderMMMD = dates.map((date) =>
-    dayjs(date.start_datetime).utc().format("MMM D")
-  );
-  const dateHeaderDDD = dates.map((date) =>
-    dayjs(date.start_datetime).utc().format("ddd")
-  );
-
-  // console.log("TimeSlotDragSelector dateHeaderMMMD", dateHeaderMMMD);
-
-  // Body of Array
-  // Column
-  const columnCount = dateHeaderMMMD.length;
-
-  // Row
-  const rowCount = calculateTimeSlotBlocks(
-    dates[0].start_datetime,
-    dates[0].end_datetime
-  );
-
-  const readModeBody: boolean[][] = [];
-  const writeModeBody: boolean[][] = [];
-  const temp: boolean[] = [];
-  for (let i = 0; i < columnCount; i++) {
-    temp.push(false);
-  }
-
-  for (let i = 0; i < rowCount; i++) {
-    readModeBody.push(temp);
-    writeModeBody.push(temp);
-  }
-
   return (
     <>
       <div className="flex bg-red-200 w-[100%] items-center gap-5 justify-center">
         {/* TimePicker */}
         <div className="flex w-[50rem]">
           {/* TimeSlot */}
-          <TimeSlot startTime={startTime} endTime={endTime} />
+          <TimeSlot startTime={startTime!} endTime={endTime!} />
           {/* Time */}
           <TimeSlotDragSelector
+            dates={dates!}
             eventId={currentEventId}
             respondentsData={respondentsData}
-            readModeBody={readModeBody}
-            writeModeBody={writeModeBody}
-            dateHeaderDDD={dateHeaderDDD}
-            dateHeaderMMMD={dateHeaderMMMD}
-          />
-          <Respondents
-            eventId={params.event}
-            respondentsData={respondentsData}
+            availabilities={availabilities}
+            // readModeBody={readModeBody}
+            // writeModeBody={writeModeBody}
+            // dateHeaderDDD={dateHeaderDDD!}
+            // dateHeaderMMMD={dateHeaderMMMD!}
           />
         </div>
 

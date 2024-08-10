@@ -1,16 +1,13 @@
 "use client";
 
 import { ModeContext } from "@/app/theme-provider";
-import { DateData } from "@/lib/schema";
-import { calculateTimeSlotBlocks } from "@/lib/utils";
-import { use, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { useTableDragSelect } from "use-table-drag-select";
-import { Button } from "../ui/button";
-import Respondents from "../Respondents";
-import ReadTimeSlot from "./WriteTimePicker";
 import WriteTimePicker from "./WriteTimePicker";
 import ReadTimePicker from "./ReadTimePicker";
-import { useRouter } from "next/navigation";
+import Respondents from "../Respondents";
+import { DateData } from "@/lib/schema";
+import { calculateTimeSlotBlocks } from "@/lib/utils";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -62,44 +59,84 @@ Color: (in order of IF statement)
 */
 
 const TimeSlotDragSelector = ({
+  availabilities,
+  dates,
   eventId,
-  readModeBody,
-  writeModeBody,
-  dateHeaderDDD,
-  dateHeaderMMMD,
   respondentsData,
 }: {
-  eventId: number;
-  readModeBody: boolean[][];
-  writeModeBody: boolean[][];
-  dateHeaderDDD: string[];
-  dateHeaderMMMD: string[];
+  availabilities: {
+    user_id: number;
+    timeslots: boolean[][];
+    availability_id: string;
+  }[];
+  dates: DateData[];
+  eventId: string;
   respondentsData: { name: string; user_id: number }[] | null;
 }) => {
   console.log("==========TimeSlotDragSelector================");
+  console.log("availabilities", availabilities);
+
+  // ============= Calculate time slots ============= //
+  // Header
+  const dateHeaderMMMD = dates?.map((date) =>
+    dayjs(date.start_datetime).utc().format("MMM D")
+  );
+  const dateHeaderDDD = dates?.map((date) =>
+    dayjs(date.start_datetime).utc().format("ddd")
+  );
+
+  // Body of Array
+  // Column
+  const columnCount = dateHeaderMMMD?.length;
+
+  // Row
+  const rowCount = calculateTimeSlotBlocks(
+    dates![0].start_datetime,
+    dates![0].end_datetime
+  );
+
+  const readModeBody: boolean[][] = [];
+  const writeModeBody: boolean[][] = [];
+  const readRowArray: boolean[] = new Array(columnCount).fill(false);
+  const writeRowArray: boolean[] = new Array(columnCount).fill(false);
+
+  for (let i = 0; i < rowCount; i++) {
+    readModeBody.push(readRowArray);
+    writeModeBody.push(writeRowArray);
+  }
+  console.log("writeModeBody", writeModeBody);
 
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
-
-  const [ref, value] = useTableDragSelect(writeModeBody);
+  const [writeBody, setWriteBody] = useState<boolean[][]>(writeModeBody);
   const [readColor, setReadColor] = useState("bg-white");
   const [name, setName] = useState<string>("");
 
-  const updateReadColor = (newColor: string) => {
-    setReadColor(newColor);
+  // const updateReadColor = (newColor: string) => {
+  //   setReadColor(newColor);
+  // };
+
+  const updateWriteSlots = (newSlots: boolean[][]) => {
+    setWriteBody([...newSlots]);
   };
 
-  const updateSlots = (newSlots: boolean[][]) => {};
+  // const updateName = (newName: string) => {
+  //   setName(newName);
+  // };
 
-  const updateName = (newName: string) => {
-    setName(newName);
-  };
-
-  console.log("TimeSlotDragSelector renders");
-  console.log("TimeSlotDragSelector - respondentsData", respondentsData);
-
+  console.log("writeBody", writeBody);
   return (
     <div className="flex">
-      {mode == "read" && (
+      {mode == "read" && availabilities.length > 0 && (
+        <>
+          <ReadTimePicker
+            readColor={readColor}
+            readModeBody={availabilities[1].timeslots}
+            dateHeaderDDD={dateHeaderDDD}
+            dateHeaderMMMD={dateHeaderMMMD}
+          />
+        </>
+      )}
+      {mode == "read" && availabilities.length == 0 && (
         <>
           <ReadTimePicker
             readColor={readColor}
@@ -112,19 +149,18 @@ const TimeSlotDragSelector = ({
       {mode == "write" && (
         <>
           <WriteTimePicker
-            writeModeBody={writeModeBody}
+            updateWriteSlots={updateWriteSlots}
+            writeModeBody={writeBody}
             dateHeaderDDD={dateHeaderDDD}
             dateHeaderMMMD={dateHeaderMMMD}
           />
         </>
       )}
       <Respondents
-        updateSlots={updateSlots}
-        updateReadColor={updateReadColor}
+        updateWriteSlots={updateWriteSlots}
+        writeModeBody={writeBody}
         eventId={eventId}
         respondentsData={respondentsData}
-        updateName={updateName}
-        timeSlots={value}
       />
     </div>
   );

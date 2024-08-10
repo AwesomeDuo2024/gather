@@ -137,13 +137,14 @@ export async function createUser(respondentName: string, eventId: string) {
 
 export async function createAvailability(
   timeSlots: boolean[][],
-  userId: number
+  userId: number,
+  eventId: string
 ) {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("Availability")
-    .insert([{ timeslots: timeSlots, user_id: userId }])
-    .select("timeslots, user_id");
+    .insert([{ timeslots: timeSlots, user_id: userId, event_id: eventId }])
+    .select("timeslots, user_id, event_id");
 
   if (error) {
     console.error("Error creating user", error);

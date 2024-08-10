@@ -2,16 +2,18 @@ import React from "react";
 import { useTableDragSelect } from "use-table-drag-select";
 
 const WriteTimePicker = ({
+  updateWriteSlots,
   writeModeBody,
   dateHeaderDDD,
   dateHeaderMMMD,
 }: {
+  updateWriteSlots: (newSlots: boolean[][]) => void;
   writeModeBody: boolean[][];
   dateHeaderDDD: string[];
   dateHeaderMMMD: string[];
 }) => {
   const [writeRef, writeValue] = useTableDragSelect(writeModeBody);
-  console.log("WriteTimePicker writeValue", writeValue);
+  console.log("writeValue", writeValue);
   return (
     <table ref={writeRef} className="flex flex-col w-[50rem] order-1 write">
       <thead className="flex flex-col items-stretch">
@@ -39,6 +41,7 @@ const WriteTimePicker = ({
               <td
                 onClick={() => {
                   console.log("write clicked");
+                  updateWriteSlots(writeValue);
                 }}
                 key={columnIndex}
                 className={`select-none flex-1 border-r border-gray-200 border-dashed

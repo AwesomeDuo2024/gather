@@ -45,12 +45,19 @@ import { toast } from "./ui/use-toast";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 const Respondents = ({
+  updateWriteSlots,
+  writeModeBody,
   eventId,
   respondentsData,
 }: {
+  updateWriteSlots: (newWriteSlots: boolean[][]) => void;
+  writeModeBody: boolean[][];
   eventId: string;
   respondentsData: { name: string; user_id: number }[] | null;
 }) => {
+  console.log("==========Respondents================");
+
+  console.log("writeModeBody", writeModeBody);
   // Returns a alphabeticall sorted list of respondents' names
   const sortedRespondents = respondentsData?.sort((a, b) =>
     a.name.localeCompare(b.name)
@@ -78,12 +85,27 @@ const Respondents = ({
     const createdUser = await createUser(data.name, eventId);
     console.log("createdUser", createdUser);
     if (createdUser != "") {
-      //1. Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
-      router.refresh();
-      //2. Toggle to read mode (default)
-      setMode("read");
-      //3. Reset form input field
-      form.reset({ name: "" });
+      const createdAvailability = await createAvailability(
+        writeModeBody,
+        createdUser.data[0].user_id,
+        eventId
+      );
+      if (createdAvailability != "") {
+        console.log("createdAvailability", createdAvailability);
+
+        //1. Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
+        router.refresh();
+        //2. Toggle to read mode (default)
+        setMode("read");
+
+        //3. Reset form input field
+        form.reset({ name: "" });
+        const emptyWriteBody = [];
+        for (let i = 0; i < writeModeBody.length; i++) {
+          emptyWriteBody.push(new Array(writeModeBody[i].length).fill(false));
+        }
+        updateWriteSlots(emptyWriteBody);
+      }
     }
   };
 

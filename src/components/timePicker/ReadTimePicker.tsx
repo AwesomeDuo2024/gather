@@ -17,17 +17,6 @@ const ReadTimePicker = ({
   const [readRef, readValue] = useTableDragSelect(readModeBody);
   const [readSlots, setReadSlots] = useState<boolean[][]>(readValue);
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
-  // console.log("ReadTimePicker readValue", readValue);
-  // console.log("ReadTimePicker readSlots", readSlots);
-
-  useEffect(() => {
-    setReadSlots([
-      [true, true, true],
-      [true, true, true],
-      [true, true, false],
-      [true, true, false],
-    ]);
-  }, []);
   return (
     <table className="flex flex-col w-[50rem] order-1 read">
       <thead className="flex flex-col items-stretch">
