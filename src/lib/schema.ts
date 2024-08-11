@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { z } from "zod";
 
 export const formSchema = z.object({
@@ -10,6 +11,12 @@ export const formSchema = z.object({
   dates: z.array(z.date()).nonempty({ message: "Select dates for event" }),
 });
 
+export const nameSchema = z.object({
+  name: z.string().min(1, {
+    message: "Name is required",
+  }),
+});
+
 export type EventData = {
   eventName: string;
   start: string;
@@ -17,12 +24,35 @@ export type EventData = {
   dates: Date[];
 };
 
+export type DateData = {
+  start_datetime: string;
+  end_datetime: string;
+};
+
 export interface FetchedData {
   event_name: string;
   id: number;
-  Date: {
-    start_datetime: string;
-    end_datetime: string;
-  }[];
+  Date: DateData[];
 }
-[];
+
+export type CreateUserResponseType = {
+  user_id: number;
+  name: string;
+  email: null | string;
+  created_at: string;
+  updated_at: string;
+  event_id: number;
+}[];
+
+export type AvailabilityDataType = {
+  user_id: number;
+  timeslots: boolean[][];
+  availability_id: number;
+};
+
+export type IModeContext = {
+  mode: string;
+  setMode: Dispatch<SetStateAction<string>>;
+  effect: string;
+  setEffect: Dispatch<SetStateAction<string>>;
+};

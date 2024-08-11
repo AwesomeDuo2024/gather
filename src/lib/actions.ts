@@ -1,7 +1,12 @@
 "use server";
 
 import { createClient } from "@/app/utils/supabase/server";
-import { EventData } from "@/lib/schema";
+import {
+  EventData,
+  CreateUserResponseType,
+  AvailabilityDataType,
+} from "@/lib/schema";
+import { animateValue } from "framer-motion";
 
 export async function createEvent(eventData: EventData) {
   const supabase = createClient();
@@ -102,4 +107,53 @@ export async function deleteUserAndAvailabilities(userId: number) {
   } else {
     return { data: null, error: response.error };
   }
+}
+
+interface User {
+  created_at: string;
+  email: string | null;
+  event_id: number | null;
+  name: string;
+  updated_at: string;
+  user_id: number;
+}
+
+// interface Availability {
+//   availability_id?: number;
+//   created_at?: string;
+//   timeslots: boolean[][];
+//   updated_at?: string;
+//   user_id?: number | null;
+// }
+
+export async function createUser(respondentName: string, eventId: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("User")
+    .insert([{ name: respondentName, event_id: eventId }])
+    .select("name, user_id");
+
+  if (error) {
+    console.error("Error creating user", error);
+    return "";
+  }
+  return { data };
+}
+
+export async function createAvailability(
+  timeSlots: boolean[][],
+  userId: number,
+  eventId: string
+) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("Availability")
+    .insert([{ timeslots: timeSlots, user_id: userId, event_id: eventId }])
+    .select("timeslots, user_id, event_id");
+
+  if (error) {
+    console.error("Error creating user", error);
+    return "";
+  }
+  return { data };
 }
