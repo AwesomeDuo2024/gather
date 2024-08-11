@@ -13,6 +13,17 @@ import TimeSlot from "@/components/timePicker/TimeSlot";
 import { DateData } from "@/lib/schema";
 import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
 import Respondents from "@/components/Respondents";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import UpdateEventForm from "@/components/eventform/UpdateEventForm";
+import ClipboardButton from "@/components/ClipboardButton";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -74,9 +85,9 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
 
   return (
     <>
-      <div className="flex bg-red-200 w-[100%] items-center gap-5 justify-center">
+      <div className="bg-red-200 w-[100%] items-center gap-5 justify-center p-6">
         {/* TimePicker */}
-        <div className="flex w-[50rem]">
+        <div className="flex w-[50rem] z-100 bg-purple-200 mx-auto">
           {/* TimeSlot */}
           <TimeSlot startTime={startTime!} endTime={endTime!} />
           {/* Time */}
@@ -85,14 +96,10 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
             eventId={currentEventId}
             respondentsData={respondentsData}
             availabilities={availabilities}
-            // readModeBody={readModeBody}
-            // writeModeBody={writeModeBody}
-            // dateHeaderDDD={dateHeaderDDD!}
-            // dateHeaderMMMD={dateHeaderMMMD!}
           />
         </div>
 
-        {/* <div className="flex flex-col bg-yellow-200">
+        <div className="flex flex-col bg-yellow-200 z-1">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="default" className="my-4">
@@ -116,11 +123,10 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
             </DialogContent>
           </Dialog>
           <ClipboardButton />
-          <Respondents respondentsData={respondentsData} />
           <Link href="/" className="p-4 bg-blue-400">
             Return to Home Button
           </Link>
-        </div> */}
+        </div>
       </div>
     </>
   );

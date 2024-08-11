@@ -110,7 +110,7 @@ const Respondents = ({
   };
 
   return (
-    <div className="order-2">
+    <div className="order-2 bg-green-200 z-999">
       {mode == "write" && (
         <div className="flex gap-1 my-4">
           {/* Cancel Button*/}
@@ -121,6 +121,13 @@ const Respondents = ({
             onClick={() => {
               console.log("Clicked add availability");
               setMode("read");
+              const emptyWriteBody = [];
+              for (let i = 0; i < writeModeBody.length; i++) {
+                emptyWriteBody.push(
+                  new Array(writeModeBody[i].length).fill(false)
+                );
+              }
+              updateWriteSlots(emptyWriteBody);
             }}
           >
             Cancel

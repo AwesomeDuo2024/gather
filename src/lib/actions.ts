@@ -1,7 +1,12 @@
 "use server";
 
 import { createClient } from "@/app/utils/supabase/server";
-import { EventData, CreateUserResponseType } from "@/lib/schema";
+import {
+  EventData,
+  CreateUserResponseType,
+  AvailabilityDataType,
+} from "@/lib/schema";
+import { animateValue } from "framer-motion";
 
 export async function createEvent(eventData: EventData) {
   const supabase = createClient();

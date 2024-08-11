@@ -6,8 +6,9 @@ import { useTableDragSelect } from "use-table-drag-select";
 import WriteTimePicker from "./WriteTimePicker";
 import ReadTimePicker from "./ReadTimePicker";
 import Respondents from "../Respondents";
-import { DateData } from "@/lib/schema";
+import { AvailabilityDataType, DateData } from "@/lib/schema";
 import { calculateTimeSlotBlocks } from "@/lib/utils";
+import MultipleReadTimePicker from "./MultipleReadTimePicker";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -58,17 +59,107 @@ Color: (in order of IF statement)
 ]
 */
 
+const compare = (a1: any[], a2: any[]) => {
+  return a1.map((val, idx) => {
+    return val.map((v: any, index: any) => {
+      return v | a2[idx][index] ? true : false;
+    });
+  });
+};
+
+const addNestedArrays = (arr1: number[][], arr2: number[][]) => {
+  // Initialize an empty array to store the result
+  let result = [];
+
+  // Iterate through each row
+  for (let i = 0; i < arr1.length; i++) {
+    // Initialize an empty row for the result
+    let row = [];
+
+    // Iterate through each column
+    for (let j = 0; j < arr1[i].length; j++) {
+      // Add the corresponding elements from arr1 and arr2
+      row.push(arr1[i][j] + arr2[i][j]);
+    }
+
+    // Push the resulting row to the result array
+    result.push(row);
+  }
+
+  // Return the result
+  return result;
+};
+
+const filterAndtransformNestedBoolToNestedNum = (
+  availabilities: AvailabilityDataType[]
+): number[][] | null => {
+  const filtered_availabilities = availabilities.map(
+    (avail) => avail.timeslots
+  );
+
+  const transformed_availabilities = filtered_availabilities.map((v1) =>
+    v1.map((v2) => v2.map((v3) => (v3 == true ? 1 : 0)))
+  );
+
+  if (availabilities.length > 1) {
+    console.log("availability length > 1");
+    // return [...availabilities][1].timeslots.map((row) => row);
+    let temp = addNestedArrays(
+      transformed_availabilities[0],
+      transformed_availabilities[1]
+    );
+    for (let i = 2; i < transformed_availabilities.length; ++i) {
+      const newTemp = [...temp];
+      console.log("newTemp", newTemp);
+      temp = addNestedArrays([...newTemp], transformed_availabilities[i]);
+    }
+    console.log("temp", temp);
+    return temp.map((row) => row);
+  } else if (availabilities.length == 1) {
+    console.log("availability length = 0");
+    const returnThis: unknown | number[][] = filtered_availabilities
+      .map((v1) => v1.map((v2) => v2.map((v3) => (v3 == true ? 1 : 0))))
+      .flat();
+    console.log(JSON.stringify(returnThis));
+    return returnThis as number[][];
+  } else {
+    return null;
+  }
+};
+
+function findAvailabilities(
+  availabilities: AvailabilityDataType[]
+): boolean[][] | null {
+  const filtered_availabilities = availabilities.map(
+    (avail) => avail.timeslots
+  );
+
+  if (availabilities.length > 1) {
+    console.log("availability length > 1");
+    // return [...availabilities][1].timeslots.map((row) => row);
+    let temp = compare(filtered_availabilities[0], filtered_availabilities[1]);
+    for (let i = 2; i < filtered_availabilities.length; ++i) {
+      const newTemp = [...temp];
+      console.log("newTemp", newTemp);
+      temp = compare([...newTemp], filtered_availabilities[i]);
+    }
+    console.log("temp", temp);
+    return temp.map((row) => row);
+  } else if (availabilities.length == 1) {
+    console.log("availability length = 0");
+    return [...availabilities][0].timeslots.map((row) => row);
+  } else {
+    return null;
+  }
+}
+
 const TimeSlotDragSelector = ({
   availabilities,
   dates,
   eventId,
   respondentsData,
 }: {
-  availabilities: {
-    user_id: number;
-    timeslots: boolean[][];
-    availability_id: string;
-  }[];
+  availabilities: AvailabilityDataType[];
   dates: DateData[];
   eventId: string;
   respondentsData: { name: string; user_id: number }[] | null;
@@ -119,18 +210,22 @@ const TimeSlotDragSelector = ({
     setWriteBody([...newSlots]);
   };
 
-  // const updateName = (newName: string) => {
-  //   setName(newName);
-  // };
-
+  const modifiedAvailabilities = findAvailabilities(availabilities!);
+  console.log("modifiedAvailabilities", modifiedAvailabilities);
   console.log("writeBody", writeBody);
+
+  const transformedAvailabilities = filterAndtransformNestedBoolToNestedNum(
+    availabilities!
+  );
+  console.log("transformedAvailabilities", transformedAvailabilities);
   return (
     <div className="flex">
       {mode == "read" && availabilities.length > 0 && (
         <>
-          <ReadTimePicker
+          <MultipleReadTimePicker
             readColor={readColor}
-            readModeBody={availabilities[1].timeslots}
+            availabilities={modifiedAvailabilities!}
+            commonAvailability={transformedAvailabilities!}
             dateHeaderDDD={dateHeaderDDD}
             dateHeaderMMMD={dateHeaderMMMD}
           />

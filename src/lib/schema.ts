@@ -44,6 +44,12 @@ export type CreateUserResponseType = {
   event_id: number;
 }[];
 
+export type AvailabilityDataType = {
+  user_id: number;
+  timeslots: boolean[][];
+  availability_id: number;
+};
+
 export type IModeContext = {
   mode: string;
   setMode: Dispatch<SetStateAction<string>>;

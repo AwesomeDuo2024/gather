@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTableDragSelect } from "use-table-drag-select";
 
 const WriteTimePicker = ({
@@ -14,6 +14,9 @@ const WriteTimePicker = ({
 }) => {
   const [writeRef, writeValue] = useTableDragSelect(writeModeBody);
   console.log("writeValue", writeValue);
+  useEffect(() => {
+    updateWriteSlots(writeValue);
+  }, [writeValue]);
   return (
     <table ref={writeRef} className="flex flex-col w-[50rem] order-1 write">
       <thead className="flex flex-col items-stretch">
@@ -41,7 +44,6 @@ const WriteTimePicker = ({
               <td
                 onClick={() => {
                   console.log("write clicked");
-                  updateWriteSlots(writeValue);
                 }}
                 key={columnIndex}
                 className={`select-none flex-1 border-r border-gray-200 border-dashed
