@@ -43,6 +43,7 @@ import { nameSchema } from "@/lib/schema";
 import { z } from "zod";
 import { toast } from "./ui/use-toast";
 import { DialogClose } from "@radix-ui/react-dialog";
+import AddAvailabilityButton from "./AddAvailabilityButton";
 
 const Respondents = ({
   updateWriteSlots,
@@ -110,7 +111,7 @@ const Respondents = ({
   };
 
   return (
-    <div className="order-2 bg-green-200 z-999">
+    <div>
       {mode == "write" && (
         <div className="flex gap-1 my-4">
           {/* Cancel Button*/}
@@ -211,78 +212,77 @@ const Respondents = ({
       )}
       {mode == "read" && (
         <>
-          <Button
-            key={crypto.randomUUID()}
-            className={`my-4 animate-bounce-awhile`}
-            onClick={() => {
-              console.log("Clicked add availability");
-              mode == "read" ? setMode("write") : setMode("read");
-            }}
-          >
-            Add availability
-          </Button>
-          <p>Respondents:</p>
-
-          {/* === Display Respondents === */}
-          {sortedRespondents?.map((respondent) => {
-            const { name, user_id: userId } = respondent;
-            return (
-              <div
-                key={userId}
-                className="flex items-center py-2 px-4 rounded-md my-2 gap-4 group border "
-              >
-                <p>{name}</p>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full border-transparent text-gray-500 hover:bg-blue-100 hover:text-blue-600"
-                    onClick={() => console.log("Edit user")}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="rounded-full border-transparent text-red-600 hover:bg-red-100 hover:text-red-600"
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="mb-1">
-                          Removing {name}&apos;s availabilities
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-gray-700">
-                          Are you sure you wish to remove {name} from the event?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter className="gap-2">
-                        <AlertDialogCancel className=" border-transparent hover:bg-gray-200">
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          className="bg-red-600 hover:bg-red-700"
-                          onClick={() => {
-                            deleteUserAndAvailabilities(userId);
-                            // Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
-                            router.refresh();
-                          }}
+          <p className="font-medium mt-4 mb-2 text-sm lg:text-base">
+            Respondents: <span>{sortedRespondents?.length}</span>
+          </p>
+          <div className="grid grid-cols-2 gap-x-10 gap-y-6 md:block">
+            {/* === Display Respondents === */}
+            {sortedRespondents?.map((respondent) => {
+              const { name, user_id: userId } = respondent;
+              return (
+                <div
+                  key={userId}
+                  className="flex justify-between items-center py-1 rounded-md group"
+                >
+                  <p className="break-words overflow-wrap w-2/4 lg:text-sm group-hover:font-semibold">
+                    {name}
+                  </p>
+                  <div className="flex gap-1 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full border-transparent text-gray-500 hover:bg-blue-100 hover:text-blue-600"
+                      onClick={() => console.log("Edit user")}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="rounded-full border-transparent text-red-600 hover:bg-red-100 hover:text-red-600"
                         >
-                          Remove
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="mb-1">
+                            Removing {name}&apos;s availabilities
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="text-gray-700">
+                            Are you sure you wish to remove {name} from the
+                            event?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="gap-2">
+                          <AlertDialogCancel className=" border-transparent hover:bg-gray-200">
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-red-600 hover:bg-red-700"
+                            onClick={() => {
+                              deleteUserAndAvailabilities(userId);
+                              // Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
+                              router.refresh();
+                            }}
+                          >
+                            Remove
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </>
       )}
+      <div className="w-full bottom-0 left-0 p-4 fixed lg:p-0 lg:static">
+        <AddAvailabilityButton />
+      </div>
     </div>
   );
 };

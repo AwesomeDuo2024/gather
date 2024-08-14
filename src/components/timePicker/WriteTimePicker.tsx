@@ -18,12 +18,12 @@ const WriteTimePicker = ({
     updateWriteSlots(writeValue);
   }, [writeValue]);
   return (
-    <table ref={writeRef} className="flex flex-col w-[50rem] order-1 write">
+    <table ref={writeRef} className="flex flex-col order-1 write">
       <thead className="flex flex-col items-stretch">
         <tr className="flex">
           <th></th>
           {dateHeaderMMMD.map((date, ind) => (
-            <th className="flex-1" key={ind}>
+            <th className="flex-1 text-sm" key={ind}>
               {date}
             </th>
           ))}
@@ -31,7 +31,7 @@ const WriteTimePicker = ({
         <tr className="flex">
           <th></th>
           {dateHeaderDDD.map((date, ind) => (
-            <th className="flex-1" key={ind}>
+            <th className="flex-1 text-sm font-normal mb-2" key={ind}>
               {date}
             </th>
           ))}
@@ -39,7 +39,7 @@ const WriteTimePicker = ({
       </thead>
       <tbody className="flex flex-col divide-y  border-2 border-solid border-gray-400">
         {writeValue.map((row, rowIndex) => (
-          <tr className="flex lg:h-[1rem] bg-white" key={rowIndex}>
+          <tr className="flex h-[1.5rem] bg-white" key={rowIndex}>
             {row.map((_, columnIndex) => (
               <td
                 onClick={() => {

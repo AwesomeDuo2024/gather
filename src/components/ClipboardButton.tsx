@@ -10,7 +10,7 @@ const ClipboardButton = () => {
   return (
     <Button
       variant="default"
-      className="mb-4"
+      className=""
       onClick={() => {
         navigator.clipboard.writeText(window.location.href);
         toast({
@@ -18,9 +18,8 @@ const ClipboardButton = () => {
         });
       }}
     >
-      <Copy className="mr-2 h-4 w-4" /> Copy Event Link
+      <Copy className="h-4 w-4" /> <span className="hidden sm:block ml-2">Get link</span>
     </Button>
   );
 };
 export default ClipboardButton;
-

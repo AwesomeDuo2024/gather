@@ -29,15 +29,12 @@ const TimeSlot = ({
   return (
     <>
       <div className="flex flex-col flex-none mr-2">
-        <div className="h-[3rem]"></div>
-
         {timeSlots.map((item, ind) => (
           <div
             key={ind}
             onClick={() => {}}
             className="text-primary-content grow place-content-top"
           >
-            <h1 className="text-sm">{item}</h1>
           </div>
         ))}
       </div>

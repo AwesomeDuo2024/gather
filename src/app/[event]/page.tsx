@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/app/utils/supabase/server";
+import { Pencil } from "lucide-react";
 
 import {
   getCurrentEventName,
@@ -84,26 +85,20 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   console.log("EventPage - respondentsData", respondentsData);
 
   return (
-    <>
-      <div className="bg-red-200 w-[100%] items-center gap-5 justify-center p-6">
-        {/* TimePicker */}
-        <div className="flex w-[50rem] z-100 bg-purple-200 mx-auto">
-          {/* TimeSlot */}
-          <TimeSlot startTime={startTime!} endTime={endTime!} />
-          {/* Time */}
-          <TimeSlotDragSelector
-            dates={dates!}
-            eventId={currentEventId}
-            respondentsData={respondentsData}
-            availabilities={availabilities}
-          />
+    <main className="container px-8 lg:px-20">
+      <div className="flex items-center mt-4 mb-8 lg:my-10 gap-8 justify-between">
+        <div className="text-md sm:text-xl font-medium break-words overflow-wrap w-2/3">
+          {currentEventName}
         </div>
-
-        <div className="flex flex-col bg-yellow-200 z-1">
+        <div className="flex gap-4">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="default" className="my-4">
-                Edit Event
+              <Button
+                variant="secondary"
+                className="text-gray-600 border bg-transparent hover:bg-blue-50 hover:text-blue-500 transition-all"
+              >
+                <Pencil className="h-4 w-4" />
+                <span className="hidden sm:block ml-2">Edit event</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[30rem] max-h-[90%] justify-center">
@@ -123,12 +118,23 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
             </DialogContent>
           </Dialog>
           <ClipboardButton />
-          <Link href="/" className="p-4 bg-blue-400">
-            Return to Home Button
-          </Link>
         </div>
       </div>
-    </>
+      <div>
+        {/* TimePicker */}
+        <div className="flex flex-col">
+          {/* TimeSlot */}
+          {/* <TimeSlot startTime={startTime!} endTime={endTime!} /> */}
+          {/* Time */}
+          <TimeSlotDragSelector
+            dates={dates!}
+            eventId={currentEventId}
+            respondentsData={respondentsData}
+            availabilities={availabilities}
+          />
+        </div>
+      </div>
+    </main>
   );
 };
 export default EventPage;

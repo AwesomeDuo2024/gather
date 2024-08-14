@@ -219,44 +219,48 @@ const TimeSlotDragSelector = ({
   );
   console.log("transformedAvailabilities", transformedAvailabilities);
   return (
-    <div className="flex">
-      {mode == "read" && availabilities.length > 0 && (
-        <>
-          <MultipleReadTimePicker
-            readColor={readColor}
-            availabilities={modifiedAvailabilities!}
-            commonAvailability={transformedAvailabilities!}
-            dateHeaderDDD={dateHeaderDDD}
-            dateHeaderMMMD={dateHeaderMMMD}
-          />
-        </>
-      )}
-      {mode == "read" && availabilities.length == 0 && (
-        <>
-          <ReadTimePicker
-            readColor={readColor}
-            readModeBody={readModeBody}
-            dateHeaderDDD={dateHeaderDDD}
-            dateHeaderMMMD={dateHeaderMMMD}
-          />
-        </>
-      )}
-      {mode == "write" && (
-        <>
-          <WriteTimePicker
-            updateWriteSlots={updateWriteSlots}
-            writeModeBody={writeBody}
-            dateHeaderDDD={dateHeaderDDD}
-            dateHeaderMMMD={dateHeaderMMMD}
-          />
-        </>
-      )}
-      <Respondents
-        updateWriteSlots={updateWriteSlots}
-        writeModeBody={writeBody}
-        eventId={eventId}
-        respondentsData={respondentsData}
-      />
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-12">
+      <div className="w-full">
+        {mode == "read" && availabilities.length > 0 && (
+          <>
+            <MultipleReadTimePicker
+              readColor={readColor}
+              availabilities={modifiedAvailabilities!}
+              commonAvailability={transformedAvailabilities!}
+              dateHeaderDDD={dateHeaderDDD}
+              dateHeaderMMMD={dateHeaderMMMD}
+            />
+          </>
+        )}
+        {mode == "read" && availabilities.length == 0 && (
+          <>
+            <ReadTimePicker
+              readColor={readColor}
+              readModeBody={readModeBody}
+              dateHeaderDDD={dateHeaderDDD}
+              dateHeaderMMMD={dateHeaderMMMD}
+            />
+          </>
+        )}
+        {mode == "write" && (
+          <>
+            <WriteTimePicker
+              updateWriteSlots={updateWriteSlots}
+              writeModeBody={writeBody}
+              dateHeaderDDD={dateHeaderDDD}
+              dateHeaderMMMD={dateHeaderMMMD}
+            />
+          </>
+        )}
+      </div>
+      <div className="lg:w-1/4">
+        <Respondents
+          updateWriteSlots={updateWriteSlots}
+          writeModeBody={writeBody}
+          eventId={eventId}
+          respondentsData={respondentsData}
+        />
+      </div>
     </div>
   );
 };

@@ -17,14 +17,15 @@ import {
 export default function NavBar() {
   return (
     <div className="w-screen bg-zinc-950">
-      <div className="container flex justify-between items-center px-16 lg:px-28 py-6">
+      <div className="container flex justify-between items-center px-8 lg:px-20 py-5">
         <div className="hover:cursor-pointer">
           <Link href="/" legacyBehavior passHref>
             <Image
               src="../logo.svg"
-              width={95}
-              height={95}
+              width={100}
+              height={100}
               alt="Picture of the author"
+              className="w-auto"
             />
           </Link>
         </div>
@@ -32,7 +33,7 @@ export default function NavBar() {
           <NavigationMenuList>
             <NavigationMenuItem className="flex gap-8">
               <Link href="/#faq" legacyBehavior passHref>
-                <NavigationMenuLink className="text-gray-500 hover:text-gray-200 transition-all">
+                <NavigationMenuLink className="text-gray-500 hover:text-gray-200 transition-all text-sm lg:text-base">
                   How to use
                 </NavigationMenuLink>
               </Link>
@@ -41,7 +42,7 @@ export default function NavBar() {
                 legacyBehavior
                 passHref
               >
-                <NavigationMenuLink className="text-gray-500 hover:text-gray-200 transition-all">
+                <NavigationMenuLink className="text-gray-500 hover:text-gray-200 transition-all text-sm lg:text-base">
                   Donate
                 </NavigationMenuLink>
               </Link>

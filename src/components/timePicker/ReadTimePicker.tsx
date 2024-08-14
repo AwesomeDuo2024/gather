@@ -51,12 +51,12 @@ const ReadTimePicker = ({
   // const readSlots = useRef(readValue);
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
   return (
-    <table className="flex flex-col w-[50rem] order-1 read">
-      <thead className="flex flex-col items-stretch">
+    <table className="flex flex-col order-1 read">
+      <thead className="flex flex-col">
         <tr className="flex">
           <th></th>
           {dateHeaderMMMD.map((date, ind) => (
-            <th className="flex-1" key={ind}>
+            <th className="flex-1 text-sm" key={ind}>
               {date}
             </th>
           ))}
@@ -64,19 +64,20 @@ const ReadTimePicker = ({
         <tr className="flex">
           <th></th>
           {dateHeaderDDD.map((date, ind) => (
-            <th className="flex-1" key={ind}>
+            <th className="flex-1 text-sm font-normal mb-2" key={ind}>
               {date}
             </th>
           ))}
         </tr>
       </thead>
-      <tbody className="flex flex-col divide-y  border-2 border-solid border-gray-400">
+      <tbody className="flex flex-col divide-y border-2 border-solid border-gray-400">
         {readValue.map((row, rowIndex) => (
           <tr
             onClick={() => {
               setEffect(crypto.randomUUID());
             }}
-            className="flex lg:h-[1rem] bg-white"
+            // Adjust cell size
+            className="flex h-[1.5rem]"
             key={rowIndex}
           >
             {row.map((_, columnIndex) => (
