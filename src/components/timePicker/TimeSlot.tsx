@@ -25,7 +25,7 @@ const TimeSlot = ({
   for (let i = 0; i < diffTime; ++i) {
     timeSlots.push(dayjs(startTime).utc().add(i, "hour").format("h a"));
   }
-
+  
   return (
     <>
     {/* Change gap size here to align with table row */}

@@ -50,8 +50,6 @@ const ReadTimePicker = ({
 }) => {
   // if the data passed in is of AvailabilityDataType
   const [readRef, readValue] = useTableDragSelect(readModeBody);
-  console.log("HERERERERER");
-  console.log(startTime, endTime);
 
   console.log("readValue", readValue);
   console.log("readRef", readValue);

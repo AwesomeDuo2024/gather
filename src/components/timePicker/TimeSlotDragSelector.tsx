@@ -8,8 +8,6 @@ import Respondents from "../Respondents";
 import { AvailabilityDataType, DateData } from "@/lib/schema";
 import { calculateTimeSlotBlocks } from "@/lib/utils";
 import MultipleReadTimePicker from "./MultipleReadTimePicker";
-import TimeSlot from "@/components/timePicker/TimeSlot";
-import { start } from "repl";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -225,9 +223,7 @@ const TimeSlotDragSelector = ({
   console.log("transformedAvailabilities", transformedAvailabilities);
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-12">
-      {/* <div>
-        <TimeSlot startTime={startTime!} endTime={endTime!} />
-      </div> */}
+    
       <div className="w-full">
         {mode == "read" && availabilities.length > 0 && (
           <>
