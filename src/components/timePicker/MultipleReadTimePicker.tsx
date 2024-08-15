@@ -23,7 +23,7 @@ const MultipleReadTimePicker = ({
 
   return (
     <table className="flex flex-col order-1 read">
-      <thead className="flex flex-col items-stretch">
+      <thead className="flex flex-col sticky top-0 py-3 bg-white z-10">
         <tr className="flex">
           <th></th>
           {dateHeaderMMMD.map((date, ind) => (
@@ -66,19 +66,20 @@ const MultipleReadTimePicker = ({
                 ${
                   availabilities[rowIndex][columnIndex] &&
                   commonAvailability[rowIndex][columnIndex] == 1
-                    ? "bg-red-200"
+                    ? "bg-sky-200"
                     : undefined
                 }
                 ${
                   availabilities[rowIndex][columnIndex] &&
                   commonAvailability[rowIndex][columnIndex] == 2
-                    ? "bg-red-400"
+                    ? "bg-sky-400"
                     : undefined
                 }
+                
                 ${
                   availabilities[rowIndex][columnIndex] &&
-                  commonAvailability[rowIndex][columnIndex] == 3
-                    ? "bg-red-500"
+                  commonAvailability[rowIndex][columnIndex] >= 3
+                    ? "bg-sky-700"
                     : undefined
                 }`}
               />

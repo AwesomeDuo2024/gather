@@ -13,7 +13,7 @@ import { FetchedData } from "@/lib/schema";
 import TimeSlot from "@/components/timePicker/TimeSlot";
 import { DateData } from "@/lib/schema";
 import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
-import Respondents from "@/components/Respondents";
+
 import {
   Dialog,
   DialogContent,
@@ -85,8 +85,8 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   console.log("EventPage - respondentsData", respondentsData);
 
   return (
-    <main className="container px-8 lg:px-20">
-      <div className="flex items-center mt-4 mb-8 lg:my-10 gap-8 justify-between">
+    <main className="container px-8 lg:px-20 mb-44 lg:mb-20">
+      <div className="flex items-center my-6 lg:my-10 gap-8 justify-between">
         <div className="text-md sm:text-xl font-medium break-words overflow-wrap w-2/3">
           {currentEventName}
         </div>
@@ -120,19 +120,19 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           <ClipboardButton />
         </div>
       </div>
-      <div>
-        {/* TimePicker */}
-        <div className="flex flex-col">
-          {/* TimeSlot */}
-          {/* <TimeSlot startTime={startTime!} endTime={endTime!} /> */}
-          {/* Time */}
-          <TimeSlotDragSelector
-            dates={dates!}
-            eventId={currentEventId}
-            respondentsData={respondentsData}
-            availabilities={availabilities}
-          />
+      {/* TimePicker */}
+      <div className="flex flex-col">
+        {/* TimeSlot */}
+        <div>
+          <TimeSlot startTime={startTime!} endTime={endTime!} />
         </div>
+        {/* Time */}
+        <TimeSlotDragSelector
+          dates={dates!}
+          eventId={currentEventId}
+          respondentsData={respondentsData}
+          availabilities={availabilities}
+        />
       </div>
     </main>
   );

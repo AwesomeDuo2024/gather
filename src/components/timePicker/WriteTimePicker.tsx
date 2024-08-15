@@ -19,7 +19,7 @@ const WriteTimePicker = ({
   }, [writeValue]);
   return (
     <table ref={writeRef} className="flex flex-col order-1 write">
-      <thead className="flex flex-col items-stretch">
+      <thead className="flex flex-col sticky top-0 py-3 bg-white z-10">
         <tr className="flex">
           <th></th>
           {dateHeaderMMMD.map((date, ind) => (
@@ -49,8 +49,8 @@ const WriteTimePicker = ({
                 className={`select-none flex-1 border-r border-gray-200 border-dashed
                  ${
                    writeValue[rowIndex][columnIndex]
-                     ? "bg-red-500"
-                     : "bg-red-300"
+                     ? "bg-sky-500"
+                     : "bg-sky-300"
                  }`}
               />
             ))}

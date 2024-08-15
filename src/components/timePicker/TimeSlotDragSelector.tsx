@@ -2,7 +2,6 @@
 
 import { ModeContext } from "@/app/theme-provider";
 import { useContext, useState } from "react";
-import { useTableDragSelect } from "use-table-drag-select";
 import WriteTimePicker from "./WriteTimePicker";
 import ReadTimePicker from "./ReadTimePicker";
 import Respondents from "../Respondents";

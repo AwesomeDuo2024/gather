@@ -28,13 +28,14 @@ const TimeSlot = ({
 
   return (
     <>
-      <div className="flex flex-col flex-none mr-2">
+      <div className="flex flex-col  mr-2">
         {timeSlots.map((item, ind) => (
           <div
             key={ind}
             onClick={() => {}}
             className="text-primary-content grow place-content-top"
           >
+            {item}
           </div>
         ))}
       </div>

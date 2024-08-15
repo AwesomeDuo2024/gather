@@ -52,7 +52,7 @@ const ReadTimePicker = ({
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
   return (
     <table className="flex flex-col order-1 read">
-      <thead className="flex flex-col">
+      <thead className="flex flex-col sticky top-0 py-3 bg-white z-10">
         <tr className="flex">
           <th></th>
           {dateHeaderMMMD.map((date, ind) => (
