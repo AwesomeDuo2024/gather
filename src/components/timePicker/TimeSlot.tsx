@@ -23,17 +23,18 @@ const TimeSlot = ({
   // Parse the start time
   // 2024-07-28T00:00:00+00:00 -> 00:00:00
   for (let i = 0; i < diffTime; ++i) {
-    timeSlots.push(dayjs(startTime).utc().add(i, "hour").format("h A"));
+    timeSlots.push(dayjs(startTime).utc().add(i, "hour").format("h a"));
   }
 
   return (
     <>
-      <div className="flex flex-col  mr-2">
+    {/* Change gap size here to align with table row */}
+      <div className="flex flex-col mt-1 gap-8">
         {timeSlots.map((item, ind) => (
           <div
             key={ind}
             onClick={() => {}}
-            className="text-primary-content grow place-content-top"
+            className="text-primary-content text-xs grow place-content-top"
           >
             {item}
           </div>

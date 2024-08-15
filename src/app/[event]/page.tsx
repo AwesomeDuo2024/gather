@@ -10,7 +10,7 @@ import {
   calculateTimeSlotBlocks,
 } from "@/lib/utils";
 import { FetchedData } from "@/lib/schema";
-import TimeSlot from "@/components/timePicker/TimeSlot";
+// import TimeSlot from "@/components/timePicker/TimeSlot";
 import { DateData } from "@/lib/schema";
 import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
 
@@ -123,15 +123,17 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
       {/* TimePicker */}
       <div className="flex flex-col">
         {/* TimeSlot */}
-        <div>
+        {/* <div>
           <TimeSlot startTime={startTime!} endTime={endTime!} />
-        </div>
+        </div> */}
         {/* Time */}
         <TimeSlotDragSelector
           dates={dates!}
           eventId={currentEventId}
           respondentsData={respondentsData}
           availabilities={availabilities}
+          startTime={startTime}
+          endTime={endTime}
         />
       </div>
     </main>

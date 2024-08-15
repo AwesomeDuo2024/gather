@@ -8,6 +8,8 @@ import Respondents from "../Respondents";
 import { AvailabilityDataType, DateData } from "@/lib/schema";
 import { calculateTimeSlotBlocks } from "@/lib/utils";
 import MultipleReadTimePicker from "./MultipleReadTimePicker";
+import TimeSlot from "@/components/timePicker/TimeSlot";
+import { start } from "repl";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -157,11 +159,15 @@ const TimeSlotDragSelector = ({
   dates,
   eventId,
   respondentsData,
+  startTime,
+  endTime,
 }: {
   availabilities: AvailabilityDataType[];
   dates: DateData[];
   eventId: string;
   respondentsData: { name: string; user_id: number }[] | null;
+  startTime: string | undefined;
+  endTime: string | undefined;
 }) => {
   console.log("==========TimeSlotDragSelector================");
   console.log("availabilities", availabilities);
@@ -219,6 +225,9 @@ const TimeSlotDragSelector = ({
   console.log("transformedAvailabilities", transformedAvailabilities);
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-12">
+      {/* <div>
+        <TimeSlot startTime={startTime!} endTime={endTime!} />
+      </div> */}
       <div className="w-full">
         {mode == "read" && availabilities.length > 0 && (
           <>
@@ -228,6 +237,8 @@ const TimeSlotDragSelector = ({
               commonAvailability={transformedAvailabilities!}
               dateHeaderDDD={dateHeaderDDD}
               dateHeaderMMMD={dateHeaderMMMD}
+              startTime={startTime!}
+              endTime={endTime!}
             />
           </>
         )}
@@ -238,6 +249,8 @@ const TimeSlotDragSelector = ({
               readModeBody={readModeBody}
               dateHeaderDDD={dateHeaderDDD}
               dateHeaderMMMD={dateHeaderMMMD}
+              startTime={startTime!}
+              endTime={endTime!}
             />
           </>
         )}
@@ -248,6 +261,8 @@ const TimeSlotDragSelector = ({
               writeModeBody={writeBody}
               dateHeaderDDD={dateHeaderDDD}
               dateHeaderMMMD={dateHeaderMMMD}
+              startTime={startTime!}
+              endTime={endTime!}
             />
           </>
         )}
