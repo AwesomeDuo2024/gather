@@ -85,13 +85,24 @@ const MultipleReadTimePicker = ({
                     ? "bg-sky-400"
                     : undefined
                 }
-                
                 ${
                   availabilities[rowIndex][columnIndex] &&
-                  commonAvailability[rowIndex][columnIndex] >= 3
+                  commonAvailability[rowIndex][columnIndex] == 3
                     ? "bg-sky-700"
                     : undefined
-                }`}
+                }
+                ${
+                  availabilities[rowIndex][columnIndex] &&
+                  commonAvailability[rowIndex][columnIndex] == 4
+                    ? "bg-sky-900"
+                    : undefined
+                }
+                  ${
+                    availabilities[rowIndex][columnIndex] &&
+                    commonAvailability[rowIndex][columnIndex] >= 5
+                      ? "bg-sky-950"
+                      : undefined
+                  }`}
                 />
               ))}
             </tr>

@@ -37,7 +37,7 @@ const FAQ = () => {
                 <br />
               </>
             }{" "}
-            That's it! Gather will automatically find the best time for
+            That&apos;s it! Gather will automatically find the best time for
             everyone.{" "}
           </AccordionContent>
         </AccordionItem>
