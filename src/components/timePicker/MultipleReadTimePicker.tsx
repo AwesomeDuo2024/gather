@@ -71,7 +71,7 @@ const MultipleReadTimePicker = ({
                     console.log("write clicked");
                   }}
                   key={columnIndex}
-                  className={`select-none flex-1 border-r border-gray-200 
+                  className={`select-none flex-1 border-r border-gray-200 hover:border-2 hover:border-gray-700 border-dotted 
                     ${
                       toggleBestTimeslot &&
                       availabilities[rowIndex][columnIndex] &&
