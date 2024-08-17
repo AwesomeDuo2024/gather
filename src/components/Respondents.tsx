@@ -124,6 +124,10 @@ const Respondents = ({
     );
   };
 
+  useEffect(() => {
+    if (respondentsData?.length === 1) setToggleBestTimeslot(false), [];
+  });
+
   return (
     <div>
       {mode == "write" && (

@@ -34,7 +34,7 @@ const TimeSlot = ({
           <div
             key={ind}
             onClick={() => {}}
-            className="text-primary-content text-xs grow place-content-top"
+            className="text-primary-content text-xs grow place-content-top "
           >
             {item}
           </div>
