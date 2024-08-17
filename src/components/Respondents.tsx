@@ -43,6 +43,7 @@ import { nameSchema } from "@/lib/schema";
 import { z } from "zod";
 import { toast } from "./ui/use-toast";
 import { DialogClose } from "@radix-ui/react-dialog";
+import AddAvailabilityButton from "./AddAvailabilityButton";
 
 const Respondents = ({
   updateWriteSlots,
@@ -75,12 +76,12 @@ const Respondents = ({
   const onSubmit = async (data: z.infer<typeof nameSchema>) => {
     console.log("onSubmit", data);
     toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      title: `${data.name}'s availability added`,
+      // description: (
+      //   <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+      //     <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+      //   </pre>
+      // ),
     });
     const createdUser = await createUser(data.name, eventId);
     console.log("createdUser", createdUser);
@@ -110,42 +111,23 @@ const Respondents = ({
   };
 
   return (
-    <div className="order-2 bg-green-200 z-999">
+    <div>
       {mode == "write" && (
-        <div className="flex gap-1 my-4">
-          {/* Cancel Button*/}
-          <Button
-            variant="outline"
-            key={effect}
-            className={`flex-1 text-red-500 border-red-500 hover:bg-red-100 hover:text-red-500`}
-            onClick={() => {
-              console.log("Clicked add availability");
-              setMode("read");
-              const emptyWriteBody = [];
-              for (let i = 0; i < writeModeBody.length; i++) {
-                emptyWriteBody.push(
-                  new Array(writeModeBody[i].length).fill(false)
-                );
-              }
-              updateWriteSlots(emptyWriteBody);
-            }}
-          >
-            Cancel
-          </Button>
+        <div className="flex fixed gap-4 bottom-0 left-0 py-4 px-8 flex-row-reverse justify-between w-full bg-green-800 lg:bg-transparent lg:flex-col lg:mt-[72px] lg:p-0 lg:static">
           {/* <NameDialog /> */}
           <Dialog>
             <DialogTrigger asChild>
               <Button
                 variant="default"
-                className="flex-1 text-white bg-green-600 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+                className="text-white bg-green-600 min-w-[8rem] h-12 lg:h-10 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
               >
                 Save
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[20rem] max-h-[90%] justify-center flex flex-col">
+            <DialogContent className="sm:max-w-[28rem] max-h-[90%] justify-center flex flex-col">
               <DialogHeader>
                 <DialogTitle className="mb-2">
-                  Enter your name to continue{" "}
+                  Who&apos;s joining the event?{" "}
                 </DialogTitle>
               </DialogHeader>
 
@@ -185,10 +167,11 @@ const Respondents = ({
                     }
                   />
                   {/* === !Dialog - Custom Close button to clear form content when closing dialog ===*/}
-                  <DialogFooter className="sm:justify-start">
+                  <DialogFooter className="flex flex-col-reverse gap-2 w-full sm:w-auto">
                     <DialogClose asChild>
                       <Button
                         type="button"
+                        className="h-12 sm:h-10"
                         variant="secondary"
                         onClick={() => form.reset({ name: "" })}
                       >
@@ -198,7 +181,7 @@ const Respondents = ({
                     <Button
                       type="submit"
                       variant="default"
-                      className="flex-1 text-white bg-green-600 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+                      className="text-white bg-green-600 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)] h-12 sm:h-10"
                     >
                       Continue
                     </Button>
@@ -207,80 +190,99 @@ const Respondents = ({
               </Form>
             </DialogContent>
           </Dialog>
-        </div>
-      )}
-      {mode == "read" && (
-        <>
+          {/* Cancel Button*/}
           <Button
-            key={crypto.randomUUID()}
-            className={`my-4 animate-bounce-awhile`}
+            variant="outline"
+            key={effect}
+            className={`text-red-500 min-w-[8rem] h-12 lg:h-10 lg:border-red-500 hover:bg-red-100 hover:text-red-500`}
             onClick={() => {
               console.log("Clicked add availability");
-              mode == "read" ? setMode("write") : setMode("read");
+              setMode("read");
+              const emptyWriteBody = [];
+              for (let i = 0; i < writeModeBody.length; i++) {
+                emptyWriteBody.push(
+                  new Array(writeModeBody[i].length).fill(false)
+                );
+              }
+              updateWriteSlots(emptyWriteBody);
             }}
           >
-            Add availability
+            Cancel
           </Button>
-          <p>Respondents:</p>
+        </div>
+      )}
 
-          {/* === Display Respondents === */}
-          {sortedRespondents?.map((respondent) => {
-            const { name, user_id: userId } = respondent;
-            return (
-              <div
-                key={userId}
-                className="flex items-center py-2 px-4 rounded-md my-2 gap-4 group border "
-              >
-                <p>{name}</p>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full border-transparent text-gray-500 hover:bg-blue-100 hover:text-blue-600"
-                    onClick={() => console.log("Edit user")}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="rounded-full border-transparent text-red-600 hover:bg-red-100 hover:text-red-600"
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="mb-1">
-                          Removing {name}&apos;s availabilities
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="text-gray-700">
-                          Are you sure you wish to remove {name} from the event?
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter className="gap-2">
-                        <AlertDialogCancel className=" border-transparent hover:bg-gray-200">
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          className="bg-red-600 hover:bg-red-700"
-                          onClick={() => {
-                            deleteUserAndAvailabilities(userId);
-                            // Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
-                            router.refresh();
-                          }}
+      {mode == "read" && (
+        <>
+          <p className="font-medium text-sm my-6 md:text-base">
+            Respondents: <span>{sortedRespondents?.length}</span>
+          </p>
+          <div className="w-full bottom-0 left-0 p-4 lg:my-3 fixed lg:p-0 lg:static">
+            <AddAvailabilityButton />
+          </div>
+          <div className="grid grid-cols-2 gap-x-10 gap-y-6 lg:block">
+            {/* === Display Respondents === */}
+            {sortedRespondents?.map((respondent) => {
+              const { name, user_id: userId } = respondent;
+              return (
+                <div
+                  key={userId}
+                  className="flex justify-between items-center py-1 rounded-md group"
+                >
+                  <p className="break-words overflow-wrap w-2/4 text-sm md:text-base group-hover:font-semibold">
+                    {name}
+                  </p>
+                  <div className="flex gap-1 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full border-transparent text-gray-500 hover:bg-blue-100 hover:text-blue-600"
+                      onClick={() => console.log("Edit user")}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="rounded-full border-transparent text-red-600 hover:bg-red-100 hover:text-red-600"
                         >
-                          Remove
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="mb-1">
+                            Removing {name}&apos;s availabilities
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="text-gray-700">
+                            Are you sure you wish to remove {name} from the
+                            event?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="gap-2">
+                          <AlertDialogCancel className="border-transparent hover:bg-gray-200">
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-red-600 hover:bg-red-700"
+                            onClick={() => {
+                              deleteUserAndAvailabilities(userId);
+                              // Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
+                              router.refresh();
+                            }}
+                          >
+                            Remove
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </>
       )}
     </div>
