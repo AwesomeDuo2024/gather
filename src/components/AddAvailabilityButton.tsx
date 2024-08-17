@@ -9,7 +9,7 @@ const AddAvailabilityButton = () => {
       {mode === "read" && (
         <Button
           key={effect}
-          className="lg:mt-0 lg:animate-bounce-awhile w-full h-12 lg:h-10"
+          className="lg:mt-0 animate-pulse-awhile w-full h-12 lg:h-10"
           onClick={() => {
             console.log("Clicked add availability");
             mode == "read" ? setMode("write") : setMode("read");
