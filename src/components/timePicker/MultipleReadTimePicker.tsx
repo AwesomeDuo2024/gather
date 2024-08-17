@@ -3,6 +3,7 @@ import { ModeContext } from "@/app/theme-provider";
 // import { findAvailabilities } from "@/lib/actions";
 import React, { useContext, useEffect, useState } from "react";
 import TimeSlot from "@/components/timePicker/TimeSlot";
+import { getMostRespondents } from "@/lib/utils";
 
 const MultipleReadTimePicker = ({
   availabilities,
@@ -12,6 +13,7 @@ const MultipleReadTimePicker = ({
   dateHeaderMMMD,
   startTime,
   endTime,
+  toggleBestTimeslot,
 }: {
   availabilities: boolean[][];
   readColor: string;
@@ -20,11 +22,14 @@ const MultipleReadTimePicker = ({
   dateHeaderMMMD: string[];
   startTime: string;
   endTime: string;
+  toggleBestTimeslot: boolean;
 }) => {
   console.log("========= MultipleReadTimePicker =========");
   console.log("availabilities", availabilities);
   console.log("commonAvailability", commonAvailability);
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
+
+  const maxPersonCount: number = getMostRespondents(commonAvailability);
 
   return (
     <div className="flex w-full">
@@ -66,43 +71,61 @@ const MultipleReadTimePicker = ({
                     console.log("write clicked");
                   }}
                   key={columnIndex}
-                  className={`select-none flex-1 border-r border-gray-200 border-dashed
-                ${
-                  availabilities[rowIndex][columnIndex] &&
-                  commonAvailability[rowIndex][columnIndex] == 0
-                    ? "white"
-                    : undefined
-                }
-                ${
-                  availabilities[rowIndex][columnIndex] &&
-                  commonAvailability[rowIndex][columnIndex] == 1
-                    ? "bg-sky-200"
-                    : undefined
-                }
-                ${
-                  availabilities[rowIndex][columnIndex] &&
-                  commonAvailability[rowIndex][columnIndex] == 2
-                    ? "bg-sky-400"
-                    : undefined
-                }
-                ${
-                  availabilities[rowIndex][columnIndex] &&
-                  commonAvailability[rowIndex][columnIndex] == 3
-                    ? "bg-sky-700"
-                    : undefined
-                }
-                ${
-                  availabilities[rowIndex][columnIndex] &&
-                  commonAvailability[rowIndex][columnIndex] == 4
-                    ? "bg-sky-900"
-                    : undefined
-                }
-                  ${
-                    availabilities[rowIndex][columnIndex] &&
-                    commonAvailability[rowIndex][columnIndex] >= 5
-                      ? "bg-sky-950"
-                      : undefined
-                  }`}
+                  className={`select-none flex-1 border-r border-gray-200 
+                    ${
+                      toggleBestTimeslot &&
+                      availabilities[rowIndex][columnIndex] &&
+                      commonAvailability[rowIndex][columnIndex] ===
+                        maxPersonCount
+                        ? "bg-gradient-to-r from-red-700 via-pink-900 to-blue-700"
+                        : undefined
+                    }
+                    ${
+                      !toggleBestTimeslot &&
+                      availabilities[rowIndex][columnIndex] &&
+                      commonAvailability[rowIndex][columnIndex] == 0
+                        ? "white"
+                        : undefined
+                    }
+                    ${
+                      !toggleBestTimeslot &&
+                      availabilities[rowIndex][columnIndex] &&
+                      commonAvailability[rowIndex][columnIndex] == 1
+                        ? "bg-sky-200"
+                        : undefined
+                    }
+                    ${
+                      !toggleBestTimeslot &&
+                      availabilities[rowIndex][columnIndex] &&
+                      commonAvailability[rowIndex][columnIndex] == 2
+                        ? "bg-sky-400"
+                        : undefined
+                    }
+                    
+                    ${
+                      !toggleBestTimeslot &&
+                      availabilities[rowIndex][columnIndex] &&
+                      commonAvailability[rowIndex][columnIndex] == 3
+                        ? "bg-sky-700"
+                        : undefined
+                    }
+                  
+                    ${
+                      !toggleBestTimeslot &&
+                      availabilities[rowIndex][columnIndex] &&
+                      commonAvailability[rowIndex][columnIndex] == 4
+                        ? "bg-sky-900"
+                        : undefined
+                    }
+                    
+                    ${
+                      !toggleBestTimeslot &&
+                      availabilities[rowIndex][columnIndex] &&
+                      commonAvailability[rowIndex][columnIndex] >= 5
+                        ? "bg-sky-950"
+                        : undefined
+                    }
+                `}
                 />
               ))}
             </tr>

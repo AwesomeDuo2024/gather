@@ -85,7 +85,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   console.log("EventPage - respondentsData", respondentsData);
 
   return (
-    <main className="container px-8 lg:px-20 mb-44 lg:mb-20">
+    <main className="container px-5 md:px-20 mb-44 lg:mb-20">
       <div className="flex items-center my-6 lg:my-10 gap-8 justify-between">
         <div className="text-md sm:text-xl font-medium break-words overflow-wrap w-2/3">
           {currentEventName}
