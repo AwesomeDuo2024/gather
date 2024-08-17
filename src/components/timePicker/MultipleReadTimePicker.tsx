@@ -2,6 +2,7 @@
 import { ModeContext } from "@/app/theme-provider";
 // import { findAvailabilities } from "@/lib/actions";
 import React, { useContext, useEffect, useState } from "react";
+import TimeSlot from "@/components/timePicker/TimeSlot";
 
 const MultipleReadTimePicker = ({
   availabilities,
@@ -9,12 +10,16 @@ const MultipleReadTimePicker = ({
   commonAvailability,
   dateHeaderDDD,
   dateHeaderMMMD,
+  startTime,
+  endTime,
 }: {
   availabilities: boolean[][];
   readColor: string;
   commonAvailability: number[][];
   dateHeaderDDD: string[];
   dateHeaderMMMD: string[];
+  startTime: string;
+  endTime: string;
 }) => {
   console.log("========= MultipleReadTimePicker =========");
   console.log("availabilities", availabilities);
@@ -22,41 +27,46 @@ const MultipleReadTimePicker = ({
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
 
   return (
-    <table className="flex flex-col w-[50rem] order-1 read">
-      <thead className="flex flex-col items-stretch">
-        <tr className="flex">
-          <th></th>
-          {dateHeaderMMMD.map((date, ind) => (
-            <th className="flex-1" key={ind}>
-              {date}
-            </th>
-          ))}
-        </tr>
-        <tr className="flex">
-          <th></th>
-          {dateHeaderDDD.map((date, ind) => (
-            <th className="flex-1" key={ind}>
-              {date}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="flex flex-col divide-y  border-2 border-solid border-gray-400">
-        {availabilities.map((row, rowIndex) => (
-          <tr
-            onClick={() => {
-              setEffect(crypto.randomUUID());
-            }}
-            className="flex lg:h-[1rem] bg-white"
-            key={rowIndex}
-          >
-            {row.map((_, columnIndex) => (
-              <td
-                onClick={() => {
-                  console.log("write clicked");
-                }}
-                key={columnIndex}
-                className={`select-none flex-1 border-r border-gray-200 border-dashed
+    <div className="flex w-full">
+      <div className="flex flex-col mr-2">
+        <div className="sticky top-0 bg-white h-20 text-transparent">.</div>
+        <TimeSlot startTime={startTime!} endTime={endTime!} />
+      </div>
+      <table className="flex flex-col order-1 read flex-1">
+        <thead className="flex flex-col sticky top-0 py-3 bg-white z-10">
+          <tr className="flex">
+            <th></th>
+            {dateHeaderMMMD.map((date, ind) => (
+              <th className="flex-1 text-sm" key={ind}>
+                {date}
+              </th>
+            ))}
+          </tr>
+          <tr className="flex">
+            <th></th>
+            {dateHeaderDDD.map((date, ind) => (
+              <th className="flex-1 text-sm font-normal mb-2" key={ind}>
+                {date}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="flex flex-col divide-y border-2 border-solid border-gray-400">
+          {availabilities.map((row, rowIndex) => (
+            <tr
+              onClick={() => {
+                setEffect(crypto.randomUUID());
+              }}
+              className="flex h-[1.5rem] bg-white"
+              key={rowIndex}
+            >
+              {row.map((_, columnIndex) => (
+                <td
+                  onClick={() => {
+                    console.log("write clicked");
+                  }}
+                  key={columnIndex}
+                  className={`select-none flex-1 border-r border-gray-200 border-dashed
                 ${
                   availabilities[rowIndex][columnIndex] &&
                   commonAvailability[rowIndex][columnIndex] == 0
@@ -66,27 +76,40 @@ const MultipleReadTimePicker = ({
                 ${
                   availabilities[rowIndex][columnIndex] &&
                   commonAvailability[rowIndex][columnIndex] == 1
-                    ? "bg-red-200"
+                    ? "bg-sky-200"
                     : undefined
                 }
                 ${
                   availabilities[rowIndex][columnIndex] &&
                   commonAvailability[rowIndex][columnIndex] == 2
-                    ? "bg-red-400"
+                    ? "bg-sky-400"
                     : undefined
                 }
                 ${
                   availabilities[rowIndex][columnIndex] &&
                   commonAvailability[rowIndex][columnIndex] == 3
-                    ? "bg-red-500"
+                    ? "bg-sky-700"
                     : undefined
-                }`}
-              />
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+                }
+                ${
+                  availabilities[rowIndex][columnIndex] &&
+                  commonAvailability[rowIndex][columnIndex] == 4
+                    ? "bg-sky-900"
+                    : undefined
+                }
+                  ${
+                    availabilities[rowIndex][columnIndex] &&
+                    commonAvailability[rowIndex][columnIndex] >= 5
+                      ? "bg-sky-950"
+                      : undefined
+                  }`}
+                />
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

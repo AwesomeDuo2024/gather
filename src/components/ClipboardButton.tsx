@@ -1,26 +1,30 @@
 "use client";
 
-import { Copy } from "lucide-react";
+import { Copy, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useState } from "react";
 
 const ClipboardButton = () => {
-  const { toast } = useToast();
+  const [isCopied, setIsCopied] = useState(false);
 
   return (
     <Button
       variant="default"
-      className="mb-4"
+      className="sm:w-[7rem]"
       onClick={() => {
         navigator.clipboard.writeText(window.location.href);
-        toast({
-          title: "Event link copied",
-        });
+        setIsCopied(true);
       }}
     >
-      <Copy className="mr-2 h-4 w-4" /> Copy Event Link
+      {isCopied ? (
+        <CheckCheck className="h-5 w-5" />
+      ) : (
+        <Copy className="h-4 w-4" />
+      )}{" "}
+      <span className="hidden sm:block ml-2">
+        {isCopied ? "Copied" : "Get link"}
+      </span>
     </Button>
   );
 };
 export default ClipboardButton;
-

@@ -2,7 +2,6 @@
 
 import { ModeContext } from "@/app/theme-provider";
 import { useContext, useState } from "react";
-import { useTableDragSelect } from "use-table-drag-select";
 import WriteTimePicker from "./WriteTimePicker";
 import ReadTimePicker from "./ReadTimePicker";
 import Respondents from "../Respondents";
@@ -158,11 +157,15 @@ const TimeSlotDragSelector = ({
   dates,
   eventId,
   respondentsData,
+  startTime,
+  endTime,
 }: {
   availabilities: AvailabilityDataType[];
   dates: DateData[];
   eventId: string;
   respondentsData: { name: string; user_id: number }[] | null;
+  startTime: string | undefined;
+  endTime: string | undefined;
 }) => {
   console.log("==========TimeSlotDragSelector================");
   console.log("availabilities", availabilities);
@@ -219,44 +222,55 @@ const TimeSlotDragSelector = ({
   );
   console.log("transformedAvailabilities", transformedAvailabilities);
   return (
-    <div className="flex">
-      {mode == "read" && availabilities.length > 0 && (
-        <>
-          <MultipleReadTimePicker
-            readColor={readColor}
-            availabilities={modifiedAvailabilities!}
-            commonAvailability={transformedAvailabilities!}
-            dateHeaderDDD={dateHeaderDDD}
-            dateHeaderMMMD={dateHeaderMMMD}
-          />
-        </>
-      )}
-      {mode == "read" && availabilities.length == 0 && (
-        <>
-          <ReadTimePicker
-            readColor={readColor}
-            readModeBody={readModeBody}
-            dateHeaderDDD={dateHeaderDDD}
-            dateHeaderMMMD={dateHeaderMMMD}
-          />
-        </>
-      )}
-      {mode == "write" && (
-        <>
-          <WriteTimePicker
-            updateWriteSlots={updateWriteSlots}
-            writeModeBody={writeBody}
-            dateHeaderDDD={dateHeaderDDD}
-            dateHeaderMMMD={dateHeaderMMMD}
-          />
-        </>
-      )}
-      <Respondents
-        updateWriteSlots={updateWriteSlots}
-        writeModeBody={writeBody}
-        eventId={eventId}
-        respondentsData={respondentsData}
-      />
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-12">
+    
+      <div className="w-full">
+        {mode == "read" && availabilities.length > 0 && (
+          <>
+            <MultipleReadTimePicker
+              readColor={readColor}
+              availabilities={modifiedAvailabilities!}
+              commonAvailability={transformedAvailabilities!}
+              dateHeaderDDD={dateHeaderDDD}
+              dateHeaderMMMD={dateHeaderMMMD}
+              startTime={startTime!}
+              endTime={endTime!}
+            />
+          </>
+        )}
+        {mode == "read" && availabilities.length == 0 && (
+          <>
+            <ReadTimePicker
+              readColor={readColor}
+              readModeBody={readModeBody}
+              dateHeaderDDD={dateHeaderDDD}
+              dateHeaderMMMD={dateHeaderMMMD}
+              startTime={startTime!}
+              endTime={endTime!}
+            />
+          </>
+        )}
+        {mode == "write" && (
+          <>
+            <WriteTimePicker
+              updateWriteSlots={updateWriteSlots}
+              writeModeBody={writeBody}
+              dateHeaderDDD={dateHeaderDDD}
+              dateHeaderMMMD={dateHeaderMMMD}
+              startTime={startTime!}
+              endTime={endTime!}
+            />
+          </>
+        )}
+      </div>
+      <div className="lg:w-1/4">
+        <Respondents
+          updateWriteSlots={updateWriteSlots}
+          writeModeBody={writeBody}
+          eventId={eventId}
+          respondentsData={respondentsData}
+        />
+      </div>
     </div>
   );
 };
