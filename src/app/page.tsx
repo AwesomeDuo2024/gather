@@ -1,7 +1,6 @@
 import CreateEventForm from "@/components/eventform/CreateEventForm";
 import FAQ from "@/components/FAQ";
 import HeroTitle from "@/components/HeroTitle";
-
 export default async function HomePage() {
   return (
     <div className="bg-zinc-950 w-screen">

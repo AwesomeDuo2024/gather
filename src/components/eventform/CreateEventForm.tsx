@@ -58,12 +58,12 @@ const CreateEventForm = () => {
   }
 
   return (
-    <main className="bg-white border drop-shadow-xl p-8 mt-0 rounded-lg mb-20 flex flex-col items-center">
+    <main className="bg-white border drop-shadow-xl px-2 py-8 sm:px-8 mt-0 rounded-lg mb-20 flex flex-col items-center">
       <h2 className="text-xl font-medium mb-4">Create Event</h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="max-w-md w-full flex flex-col gap-4"
+          className="max-w-md w-full flex flex-col gap-4 p-4"
         >
           <FormField
             control={form.control}

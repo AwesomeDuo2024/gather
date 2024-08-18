@@ -10,7 +10,6 @@ import {
   calculateTimeSlotBlocks,
 } from "@/lib/utils";
 import { FetchedData } from "@/lib/schema";
-// import TimeSlot from "@/components/timePicker/TimeSlot";
 import { DateData } from "@/lib/schema";
 import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
 
@@ -139,6 +138,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           availabilities={availability}
           startTime={startTime}
           endTime={endTime}
+          eventName={currentEventName}
         />
       </div>
     </main>

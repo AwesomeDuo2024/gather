@@ -22,10 +22,10 @@ export default function NavBar() {
           <Link href="/" legacyBehavior passHref>
             <Image
               src="/logo.svg"
-              width={100}
-              height={100}
+              width={110}
+              height={110}
               alt="Gather logo"
-              className="w-auto"
+              loading="lazy"
             />
           </Link>
         </div>

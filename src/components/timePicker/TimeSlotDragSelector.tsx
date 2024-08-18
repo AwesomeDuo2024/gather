@@ -8,6 +8,7 @@ import Respondents from "../Respondents";
 import { AvailabilityDataType, DateData } from "@/lib/schema";
 import { calculateTimeSlotBlocks } from "@/lib/utils";
 import MultipleReadTimePicker from "./MultipleReadTimePicker";
+import ScheduleCalendarEventButton from "@/components/ScheduleCalendarEventButton";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -159,6 +160,7 @@ const TimeSlotDragSelector = ({
   respondentsData,
   startTime,
   endTime,
+  eventName,
 }: {
   availabilities: AvailabilityDataType[];
   dates: DateData[];
@@ -166,6 +168,7 @@ const TimeSlotDragSelector = ({
   respondentsData: { name: string; user_id: number }[] | null;
   startTime: string | undefined;
   endTime: string | undefined;
+  eventName: string;
 }) => {
   console.log("==========TimeSlotDragSelector================");
   console.log("availabilities", availabilities);
@@ -208,7 +211,7 @@ const TimeSlotDragSelector = ({
   // To toggle best times switch. Pass state and handler to switch in Respondents component
   // Pass state to MultipleReadTimePicker component to change cell color
   const [isChecked, setIsChecked] = useState<boolean>(false);
-  
+
   // const updateReadColor = (newColor: string) => {
   //   setReadColor(newColor);
   // };
@@ -240,6 +243,7 @@ const TimeSlotDragSelector = ({
               endTime={endTime!}
               toggleBestTimeslot={isChecked}
             />
+            <ScheduleCalendarEventButton eventName={eventName} />
           </>
         )}
         {mode == "read" && availabilities.length == 0 && (
