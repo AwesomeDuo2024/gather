@@ -205,6 +205,10 @@ const TimeSlotDragSelector = ({
   const [readColor, setReadColor] = useState("bg-white");
   const [name, setName] = useState<string>("");
 
+  // To toggle best times switch. Pass state and handler to switch in Respondents component
+  // Pass state to MultipleReadTimePicker component to change cell color
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  
   // const updateReadColor = (newColor: string) => {
   //   setReadColor(newColor);
   // };
@@ -223,7 +227,6 @@ const TimeSlotDragSelector = ({
   console.log("transformedAvailabilities", transformedAvailabilities);
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-12">
-    
       <div className="w-full">
         {mode == "read" && availabilities.length > 0 && (
           <>
@@ -235,6 +238,7 @@ const TimeSlotDragSelector = ({
               dateHeaderMMMD={dateHeaderMMMD}
               startTime={startTime!}
               endTime={endTime!}
+              toggleBestTimeslot={isChecked}
             />
           </>
         )}
@@ -269,6 +273,8 @@ const TimeSlotDragSelector = ({
           writeModeBody={writeBody}
           eventId={eventId}
           respondentsData={respondentsData}
+          toggleBestTimeslot={isChecked}
+          setToggleBestTimeslot={setIsChecked}
         />
       </div>
     </div>

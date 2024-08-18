@@ -64,3 +64,10 @@ export const calculateTimeSlotBlocks = (
 ) => {
   return dayjs(endTime).diff(dayjs(startTime), "minute") / interval;
 };
+
+// ======== Get highest no. of respondents =================
+
+export const getMostRespondents = (data: number[][]): number => {
+  const flattenedData: number[] = data.flat(Infinity) as number[];
+  return Math.max(...flattenedData);
+};
