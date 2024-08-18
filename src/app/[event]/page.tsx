@@ -60,8 +60,13 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   }
   const endTime = dates?.[0].end_datetime;
   const startTime = dates?.[0].start_datetime;
-  const { Availability } = data?.[0];
-  const availabilities = Availability;
+  const availability: {
+    availability_id: number;
+    user_id: number;
+    timeslots: boolean[][];
+  }[] = data![0].Availability;
+
+  const availabilities = availability;
   console.log("availabilities", availabilities);
 
   // Extract event id from fetched data
@@ -131,7 +136,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
           dates={dates!}
           eventId={currentEventId}
           respondentsData={respondentsData}
-          availabilities={availabilities}
+          availabilities={availability}
           startTime={startTime}
           endTime={endTime}
         />
