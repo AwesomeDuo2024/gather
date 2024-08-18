@@ -12,7 +12,7 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "Project 4 - Availability Scheduler",
+  title: "Gather | Easy Scheduling",
 };
 
 export default function RootLayout({
