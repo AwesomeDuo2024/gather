@@ -56,7 +56,7 @@ const WriteTimePicker = ({
                     console.log("write clicked");
                   }}
                   key={columnIndex}
-                  className={`select-none flex-1 border-r border-gray-200 border-dashed
+                  className={`select-none flex-1 border-r border-gray-200 border-dashed hover:border-2 hover:border-gray-700 hover:border-dotted
                  ${
                    writeValue[rowIndex][columnIndex]
                      ? "bg-sky-500"

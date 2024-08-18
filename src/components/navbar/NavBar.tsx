@@ -17,7 +17,7 @@ import {
 export default function NavBar() {
   return (
     <div className="w-screen bg-zinc-950">
-      <div className="container flex justify-between items-center px-8 lg:px-20 py-5">
+      <div className="container flex justify-between items-center px-5 md:px-20 py-5">
         <div className="hover:cursor-pointer">
           <Link href="/" legacyBehavior passHref>
             <Image

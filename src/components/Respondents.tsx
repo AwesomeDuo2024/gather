@@ -44,17 +44,23 @@ import { z } from "zod";
 import { toast } from "./ui/use-toast";
 import { DialogClose } from "@radix-ui/react-dialog";
 import AddAvailabilityButton from "./AddAvailabilityButton";
+import { Switch } from "./ui/switch";
+import { Dispatch, SetStateAction } from "react";
 
 const Respondents = ({
   updateWriteSlots,
   writeModeBody,
   eventId,
   respondentsData,
+  toggleBestTimeslot,
+  setToggleBestTimeslot,
 }: {
   updateWriteSlots: (newWriteSlots: boolean[][]) => void;
   writeModeBody: boolean[][];
   eventId: string;
   respondentsData: { name: string; user_id: number }[] | null;
+  toggleBestTimeslot: boolean;
+  setToggleBestTimeslot: Dispatch<SetStateAction<boolean>>;
 }) => {
   console.log("==========Respondents================");
 
@@ -109,6 +115,18 @@ const Respondents = ({
       }
     }
   };
+
+  const checkDisableToggle = () => {
+    return (
+      respondentsData?.length === 1 ||
+      respondentsData === null ||
+      respondentsData?.length === 0
+    );
+  };
+
+  useEffect(() => {
+    if (respondentsData?.length === 1) setToggleBestTimeslot(false), [];
+  });
 
   return (
     <div>
@@ -214,10 +232,26 @@ const Respondents = ({
 
       {mode == "read" && (
         <>
-          <p className="font-medium text-sm my-6 md:text-base">
-            Respondents: <span>{sortedRespondents?.length}</span>
-          </p>
-          <div className="w-full bottom-0 left-0 p-4 lg:my-3 fixed lg:p-0 lg:static">
+          <div className="flex justify-between items-center my-4 text-sm md:text-base lg:flex-col lg:items-start lg:gap-4">
+            <p className="font-medium">
+              Respondents: <span>{sortedRespondents?.length}</span>
+            </p>
+            <div className="flex items-center lg:mb-2">
+              <Switch
+                disabled={checkDisableToggle()}
+                checked={toggleBestTimeslot}
+                onCheckedChange={setToggleBestTimeslot}
+              />
+              <p
+                className={`ml-4 ${
+                  checkDisableToggle() ? "text-gray-300" : ""
+                }`}
+              >
+                Best Times
+              </p>
+            </div>
+          </div>
+          <div className="w-full bg-white bottom-0 left-0 p-4 lg:my-3 fixed lg:p-0 lg:static">
             <AddAvailabilityButton />
           </div>
           <div className="grid grid-cols-2 gap-x-10 gap-y-6 lg:block">
