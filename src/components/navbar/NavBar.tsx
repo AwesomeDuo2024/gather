@@ -21,11 +21,11 @@ export default function NavBar() {
         <div className="hover:cursor-pointer">
           <Link href="/" legacyBehavior passHref>
             <Image
-              src="../logo.svg"
-              width={100}
-              height={100}
-              alt="Picture of the author"
-              className="w-auto"
+              src="/logo.svg"
+              width={110}
+              height={110}
+              alt="Gather logo"
+              loading="lazy"
             />
           </Link>
         </div>

@@ -38,7 +38,7 @@ const FAQ = () => {
               </>
             }{" "}
             That&apos;s it! Gather will automatically find the best time for
-            everyone.{" "}
+            everyone. Common availabilities are displayed using increasingly darker shades of color, indicating a greater number of respondents available for the specific timeslot(s). {" "}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-3">
