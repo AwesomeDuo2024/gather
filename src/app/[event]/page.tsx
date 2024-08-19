@@ -10,7 +10,6 @@ import {
   calculateTimeSlotBlocks,
 } from "@/lib/utils";
 import { FetchedData } from "@/lib/schema";
-// import TimeSlot from "@/components/timePicker/TimeSlot";
 import { DateData } from "@/lib/schema";
 import TimeSlotDragSelector from "@/components/timePicker/TimeSlotDragSelector";
 
@@ -39,7 +38,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   const { data, error } = await supabase
     .from("Event")
     .select(
-      `event_name, id, Date (start_datetime, end_datetime), User (user_id, name), Availability (availability_id, user_id, timeslots)`
+      `event_name, id, defaultSlots, Date (start_datetime, end_datetime), User (user_id, name), Availability (availability_id, user_id, timeslots)`
     )
     .eq("event_link", params.event);
 
@@ -48,7 +47,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   } else {
     console.log("EventPage Date - ", JSON.stringify(data));
   }
-  var dates: DateData[] | undefined;
+  var dates: DateData[] = [];
   try {
     dates = data![0].Date.sort(
       (a, b) => dayjs(a.start_datetime) - dayjs(b.start_datetime)
@@ -58,16 +57,38 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
       console.error("Error fetching data from Supabase", err);
     }
   }
-  const endTime = dates?.[0].end_datetime;
-  const startTime = dates?.[0].start_datetime;
+  const endTime = dates[0].end_datetime;
+  const startTime = dates[0].start_datetime;
+
   const availability: {
     availability_id: number;
     user_id: number;
-    timeslots: boolean[][];
+    timeslots: string[][];
   }[] = data![0].Availability;
 
-  const availabilities = availability;
-  console.log("availabilities", availabilities);
+  const defaultSlots: boolean[][] = data![0].defaultSlots;
+  console.log("defaultSlots", defaultSlots);
+
+  // Transform availability timeslots data from string[datetime][datetime] to boolean[][]
+  const transformedAvailabilities = availability.map((availability) => {
+    const transformedTimeslots: boolean[][] = availability.timeslots.map(
+      (row) => {
+        console.log("row", row);
+        return row.map((col) => {
+          console.log("col", col);
+          if (col === "") return false;
+          return true;
+        });
+      }
+    );
+    return {
+      availability_id: availability.availability_id,
+      user_id: availability.user_id,
+      timeslots: transformedTimeslots,
+    };
+  });
+
+  console.log("availabilities", transformedAvailabilities);
 
   // Extract event id from fetched data
   const currentEventId = data && data[0]?.id;
@@ -114,6 +135,9 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
                 </DialogDescription>
               </DialogHeader>
               <UpdateEventForm
+                previousAvailabilitiesDateTime={availability}
+                defaultSlots={defaultSlots}
+                dates={dates!}
                 eventName={currentEventName}
                 eventStartTime={currentEventStartTime}
                 eventEndTime={currentEventEndTime}
@@ -133,12 +157,15 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
         </div> */}
         {/* Time */}
         <TimeSlotDragSelector
+          defaultSlots={defaultSlots}
           dates={dates!}
           eventId={currentEventId}
           respondentsData={respondentsData}
-          availabilities={availability}
+          previousAvailabilitiesDateTime={availability}
+          availabilities={transformedAvailabilities}
           startTime={startTime}
           endTime={endTime}
+          eventName={currentEventName}
         />
       </div>
     </main>
