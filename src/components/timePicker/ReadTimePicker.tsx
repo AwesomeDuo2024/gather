@@ -33,7 +33,6 @@ const addNestedArrays = (arr1: number[][], arr2: number[][]) => {
 
 const ReadTimePicker = ({
   availabilities,
-  readColor,
   readModeBody,
   dateHeaderDDD,
   dateHeaderMMMD,
@@ -41,7 +40,6 @@ const ReadTimePicker = ({
   endTime,
 }: {
   availabilities?: boolean[][];
-  readColor: string;
   readModeBody?: boolean[][];
   dateHeaderDDD: string[];
   dateHeaderMMMD: string[];

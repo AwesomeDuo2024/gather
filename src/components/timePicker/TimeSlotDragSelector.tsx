@@ -162,6 +162,12 @@ const TimeSlotDragSelector = ({
   endTime,
   eventName,
 }: {
+  defaultSlots: boolean[][];
+  previousAvailabilitiesDateTime: {
+    availability_id: number;
+    user_id: number;
+    timeslots: string[][];
+  }[];
   availabilities: AvailabilityDataType[];
   dates: DateData[];
   eventId: string;
@@ -172,6 +178,12 @@ const TimeSlotDragSelector = ({
 }) => {
   console.log("==========TimeSlotDragSelector================");
   console.log("availabilities", availabilities);
+  console.log("previousAvailabilitiesDateTime", previousAvailabilitiesDateTime);
+  console.log("dates", dates);
+  console.log("respondentsData", respondentsData);
+  console.log("startTime", startTime);
+  console.log("endTime", endTime);
+  console.log("defaultSlots", defaultSlots);
 
   // ============= Calculate time slots ============= //
   // Header
@@ -182,30 +194,30 @@ const TimeSlotDragSelector = ({
     dayjs(date.start_datetime).utc().format("ddd")
   );
 
-  // Body of Array
-  // Column
-  const columnCount = dateHeaderMMMD?.length;
+  // // Body of Array
+  // // Column
+  // const columnCount = dateHeaderMMMD?.length;
 
-  // Row
-  const rowCount = calculateTimeSlotBlocks(
-    dates![0].start_datetime,
-    dates![0].end_datetime
-  );
+  // // Row
+  // const rowCount = calculateTimeSlotBlocks(
+  //   dates![0].start_datetime,
+  //   dates![0].end_datetime
+  // );
 
-  const readModeBody: boolean[][] = [];
-  const writeModeBody: boolean[][] = [];
-  const readRowArray: boolean[] = new Array(columnCount).fill(false);
-  const writeRowArray: boolean[] = new Array(columnCount).fill(false);
+  // const readModeBody: boolean[][] = [];
+  // const writeModeBody: boolean[][] = [];
+  // const readRowArray: boolean[] = new Array(columnCount).fill(false);
+  // const writeRowArray: boolean[] = new Array(columnCount).fill(false);
 
-  for (let i = 0; i < rowCount; i++) {
-    readModeBody.push(readRowArray);
-    writeModeBody.push(writeRowArray);
-  }
-  console.log("writeModeBody", writeModeBody);
+  // for (let i = 0; i < rowCount; i++) {
+  //   readModeBody.push(readRowArray);
+  //   writeModeBody.push(writeRowArray);
+  // }
+  // console.log("writeModeBody", writeModeBody);
 
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
-  const [writeBody, setWriteBody] = useState<boolean[][]>(writeModeBody);
   const [readColor, setReadColor] = useState("bg-white");
+  const [writeBody, setWriteBody] = useState<boolean[][]>(defaultSlots);
   const [name, setName] = useState<string>("");
 
   // To toggle best times switch. Pass state and handler to switch in Respondents component
@@ -234,7 +246,6 @@ const TimeSlotDragSelector = ({
         {mode == "read" && availabilities.length > 0 && (
           <>
             <MultipleReadTimePicker
-              readColor={readColor}
               availabilities={modifiedAvailabilities!}
               commonAvailability={transformedAvailabilities!}
               dateHeaderDDD={dateHeaderDDD}
@@ -249,8 +260,7 @@ const TimeSlotDragSelector = ({
         {mode == "read" && availabilities.length == 0 && (
           <>
             <ReadTimePicker
-              readColor={readColor}
-              readModeBody={readModeBody}
+              readModeBody={defaultSlots}
               dateHeaderDDD={dateHeaderDDD}
               dateHeaderMMMD={dateHeaderMMMD}
               startTime={startTime!}

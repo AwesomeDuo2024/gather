@@ -50,6 +50,12 @@ export type AvailabilityDataType = {
   availability_id: number;
 };
 
+export type AvailabilityDataTimeType = {
+  user_id: number;
+  timeslots: string[][];
+  availability_id: number;
+};
+
 export type IModeContext = {
   mode: string;
   setMode: Dispatch<SetStateAction<string>>;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Calendar } from "@/components/ui/calendar";
-import { formSchema } from "@/lib/schema";
+import { AvailabilityDataTimeType, DateData, formSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,21 +24,35 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { updateEventAndDates } from "@/lib/actions";
+import {
+  prepareToUpdateAvailability,
+  updateAvailability,
+  updateEventAndDates,
+} from "@/lib/actions";
 
 const EventForm = ({
+  previousAvailabilitiesDateTime,
+  defaultSlots,
+  dates,
   eventName,
   eventStartTime,
   eventEndTime,
   eventDates,
   eventId,
 }: {
+  previousAvailabilitiesDateTime: AvailabilityDataTimeType[];
+  defaultSlots: boolean[][];
+  dates: DateData[];
   eventName: string;
   eventStartTime: string;
   eventEndTime: string;
   eventDates: (Date | undefined)[];
   eventId: number;
 }) => {
+  console.log("==========UpdateEventForm================");
+  console.log("previousAvailabilitiesDateTime", previousAvailabilitiesDateTime);
+  console.log("defaultSlots", defaultSlots);
+  console.log("dates", dates);
   const [isLoading, setIsLoading] = useState(false);
 
   // Define form.
@@ -58,6 +72,14 @@ const EventForm = ({
     setIsLoading(true);
     // console.log(values);
     const updatedEvent = await updateEventAndDates(values, eventId);
+    const userAvailabilityToUpdate = await prepareToUpdateAvailability(
+      previousAvailabilitiesDateTime,
+      // defaultSlots,
+      // dates,
+      eventId
+    );
+
+    await updateAvailability(userAvailabilityToUpdate, eventId);
     // console.log(updatedEvent);
 
     // Reload current page using native web API
