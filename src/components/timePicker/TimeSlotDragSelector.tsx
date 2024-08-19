@@ -154,6 +154,8 @@ function findAvailabilities(
 }
 
 const TimeSlotDragSelector = ({
+  defaultSlots,
+  previousAvailabilitiesDateTime,
   availabilities,
   dates,
   eventId,

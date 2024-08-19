@@ -63,7 +63,7 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   const availability: {
     availability_id: number;
     user_id: number;
-    timeslots: boolean[][];
+    timeslots: string[][];
   }[] = data![0].Availability;
 
   const defaultSlots: boolean[][] = data![0].defaultSlots;
