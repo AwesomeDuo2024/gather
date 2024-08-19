@@ -285,6 +285,7 @@ const TimeSlotDragSelector = ({
       </div>
       <div className="lg:w-1/4">
         <Respondents
+          dates={dates}
           updateWriteSlots={updateWriteSlots}
           writeModeBody={writeBody}
           eventId={eventId}

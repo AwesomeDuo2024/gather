@@ -371,7 +371,7 @@ export async function createUser(respondentName: string, eventId: string) {
 }
 
 export async function createAvailability(
-  timeSlots: boolean[][],
+  timeSlots: string[][],
   userId: number,
   eventId: string
 ) {

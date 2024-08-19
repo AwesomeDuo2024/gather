@@ -8,6 +8,7 @@ import {
   createAvailability,
   createUser,
   deleteUserAndAvailabilities,
+  mapNestedBoolToNestedDateTime,
 } from "@/lib/actions";
 import {
   AlertDialog,
@@ -39,7 +40,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { nameSchema } from "@/lib/schema";
+import { DateData, nameSchema } from "@/lib/schema";
 import { z } from "zod";
 import { toast } from "./ui/use-toast";
 import { DialogClose } from "@radix-ui/react-dialog";
@@ -48,6 +49,7 @@ import { Switch } from "./ui/switch";
 import { Dispatch, SetStateAction } from "react";
 
 const Respondents = ({
+  dates,
   updateWriteSlots,
   writeModeBody,
   eventId,
@@ -55,6 +57,7 @@ const Respondents = ({
   toggleBestTimeslot,
   setToggleBestTimeslot,
 }: {
+  dates: DateData[];
   updateWriteSlots: (newWriteSlots: boolean[][]) => void;
   writeModeBody: boolean[][];
   eventId: string;
@@ -91,9 +94,15 @@ const Respondents = ({
     });
     const createdUser = await createUser(data.name, eventId);
     console.log("createdUser", createdUser);
+    // 1. When a user is created successfully
     if (createdUser != "") {
-      const createdAvailability = await createAvailability(
+      // 2. Insert availability for the created user
+      const transformedWriteModeBody = await mapNestedBoolToNestedDateTime(
         writeModeBody,
+        dates
+      );
+      const createdAvailability = await createAvailability(
+        transformedWriteModeBody, // transform this to string[datetime][datetime]
         createdUser.data[0].user_id,
         eventId
       );
@@ -115,7 +124,6 @@ const Respondents = ({
       }
     }
   };
-
   const checkDisableToggle = () => {
     return (
       respondentsData?.length === 1 ||
