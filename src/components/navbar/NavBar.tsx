@@ -19,13 +19,14 @@ export default function NavBar() {
     <div className="w-screen bg-zinc-950">
       <div className="container flex justify-between items-center px-5 md:px-20 py-5">
         <div className="hover:cursor-pointer">
-          <Link href="/" legacyBehavior passHref>
+          <Link href="/" legacyBehavior passHref data-testid="logo">
             <Image
               src="/logo.svg"
               width={110}
               height={110}
               alt="Gather logo"
               loading="lazy"
+              data-testid="logo"
             />
           </Link>
         </div>
@@ -33,7 +34,10 @@ export default function NavBar() {
           <NavigationMenuList>
             <NavigationMenuItem className="flex gap-8">
               <Link href="/#faq" legacyBehavior passHref>
-                <NavigationMenuLink className="text-gray-500 hover:text-gray-200 transition-all text-sm lg:text-base">
+                <NavigationMenuLink
+                  className="text-gray-500 hover:text-gray-200 transition-all text-sm lg:text-base"
+                  data-testid="faq-link"
+                >
                   How to use
                 </NavigationMenuLink>
               </Link>
@@ -42,7 +46,10 @@ export default function NavBar() {
                 legacyBehavior
                 passHref
               >
-                <NavigationMenuLink className="text-gray-500 hover:text-gray-200 transition-all text-sm lg:text-base">
+                <NavigationMenuLink
+                  className="text-gray-500 hover:text-gray-200 transition-all text-sm lg:text-base"
+                  data-testid="donate-link"
+                >
                   Donate
                 </NavigationMenuLink>
               </Link>
