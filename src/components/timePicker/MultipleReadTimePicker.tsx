@@ -7,7 +7,6 @@ import { getMostRespondents } from "@/lib/utils";
 
 const MultipleReadTimePicker = ({
   availabilities,
-  readColor,
   commonAvailability,
   dateHeaderDDD,
   dateHeaderMMMD,
@@ -16,7 +15,6 @@ const MultipleReadTimePicker = ({
   toggleBestTimeslot,
 }: {
   availabilities: boolean[][];
-  readColor: string;
   commonAvailability: number[][];
   dateHeaderDDD: string[];
   dateHeaderMMMD: string[];

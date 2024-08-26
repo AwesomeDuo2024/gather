@@ -279,7 +279,12 @@ const Respondents = ({
                       variant="outline"
                       size="icon"
                       className="rounded-full border-transparent text-gray-500 hover:bg-blue-100 hover:text-blue-600"
-                      onClick={() => console.log("Edit user")}
+                      onClick={() => {
+                        console.log(
+                          `You are editing user ${respondent.user_id}`
+                        );
+                        setMode("write");
+                      }}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
