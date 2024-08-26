@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavBar component matches snapshot should match snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="w-screen bg-zinc-950"
+  >
+    <div
+      class="container flex justify-between items-center px-5 md:px-20 py-5"
+    >
+      <div
+        class="hover:cursor-pointer"
+      >
+        <img
+          alt="Gather logo"
+          data-nimg="1"
+          data-testid="logo"
+          decoding="async"
+          height="110"
+          href="/"
+          loading="lazy"
+          src="/logo.svg"
+          style="color: transparent;"
+          width="110"
+        />
+      </div>
+      <nav
+        aria-label="Main"
+        class="relative z-10 flex max-w-max flex-1 items-center justify-center"
+        data-orientation="horizontal"
+        dir="ltr"
+      >
+        <div
+          style="position: relative;"
+        >
+          <ul
+            class="group flex flex-1 list-none items-center justify-center space-x-1"
+            data-orientation="horizontal"
+            dir="ltr"
+          >
+            <li
+              class="flex gap-8"
+            >
+              <a
+                class="text-gray-500 hover:text-gray-200 transition-all text-sm lg:text-base"
+                data-radix-collection-item=""
+                data-testid="faq-link"
+                href="/#faq"
+              >
+                How to use
+              </a>
+              <a
+                class="text-gray-500 hover:text-gray-200 transition-all text-sm lg:text-base"
+                data-radix-collection-item=""
+                data-testid="donate-link"
+                href="https://donate.stripe.com/test_00g7uBbfkcjebNm6oo"
+              >
+                Donate
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div
+          class="absolute left-0 top-full flex justify-center"
+        />
+      </nav>
+    </div>
+  </div>
+</DocumentFragment>
+`;
