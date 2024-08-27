@@ -196,11 +196,25 @@ const TimeSlotDragSelector = ({
   const dateHeaderDDD = dates?.map((date) =>
     dayjs(date.start_datetime).utc().format("ddd")
   );
-  let userAvailability: undefined | boolean[][] = undefined;
+  // let userAvailability: undefined | boolean[][] = undefined;
+  const userAvailabilityEditBodyRef = useRef<boolean[][] | undefined>(
+    undefined
+  );
+
+  console.log(
+    "userAvailabilityEditBodyRef",
+    userAvailabilityEditBodyRef.current
+  );
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
-  const userRef = useRef<number>(-1);
+  const userRef = useRef<{ userId: number; userName: string }>({
+    userId: -1,
+    userName: "",
+  });
   const [readColor, setReadColor] = useState("bg-white");
   const [writeBody, setWriteBody] = useState<boolean[][]>(defaultSlots);
+  // const [editBody, setEditBody] = useState<boolean[][] | undefined>(
+  //   userAvailability
+  // );
   const [name, setName] = useState<string>("");
 
   // To toggle best times switch. Pass state and handler to switch in Respondents component
@@ -220,8 +234,10 @@ const TimeSlotDragSelector = ({
       .timeslots;
   };
 
-  if (userRef.current !== -1) {
-    userAvailability = filteredAvailabilityByUserId(userRef.current);
+  if (userRef.current.userId !== -1) {
+    userAvailabilityEditBodyRef.current = filteredAvailabilityByUserId(
+      userRef.current.userId
+    );
   }
 
   const modifiedAvailabilities = findAvailabilities(availabilities!);
@@ -276,7 +292,7 @@ const TimeSlotDragSelector = ({
           <>
             <EditTimePicker
               // updateWriteSlots={updateWriteSlots}
-              editModeBody={userAvailability as boolean[][]}
+              editModeBodyRef={userAvailabilityEditBodyRef}
               dateHeaderDDD={dateHeaderDDD}
               dateHeaderMMMD={dateHeaderMMMD}
               startTime={startTime!}
@@ -287,6 +303,7 @@ const TimeSlotDragSelector = ({
       </div>
       <div className="lg:w-1/4">
         <Respondents
+          editModeBodyRef={userAvailabilityEditBodyRef}
           userRef={userRef}
           dates={dates}
           updateWriteSlots={updateWriteSlots}

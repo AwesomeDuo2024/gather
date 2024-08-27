@@ -3,22 +3,25 @@ import { useTableDragSelect } from "use-table-drag-select";
 import TimeSlot from "@/components/timePicker/TimeSlot";
 
 const EditTimePicker = ({
-  // updateWriteSlots,
-  editModeBody,
+  // updateEditSlots,
+  editModeBodyRef,
   dateHeaderDDD,
   dateHeaderMMMD,
   startTime,
   endTime,
 }: {
-  // updateWriteSlots: (newSlots: boolean[][]) => void;
-  editModeBody: boolean[][];
+  // updateEditSlots: (newSlots: boolean[][]) => void;
+  editModeBodyRef: React.MutableRefObject<boolean[][] | undefined>;
   dateHeaderDDD: string[];
   dateHeaderMMMD: string[];
   startTime: string;
   endTime: string;
 }) => {
-  const [editRef, editValue] = useTableDragSelect(editModeBody);
+  const [editRef, editValue] = useTableDragSelect(editModeBodyRef.current);
   console.log("writeValue", editValue);
+  useEffect(() => {
+    editModeBodyRef.current = editValue;
+  }, [editValue]);
   // useEffect(() => {
   //   updateWriteSlots(writeValue);
   // }, [writeValue]);
@@ -54,6 +57,7 @@ const EditTimePicker = ({
                 <td
                   onClick={() => {
                     console.log("write clicked");
+                    editModeBodyRef.current = editValue;
                   }}
                   key={columnIndex}
                   className={`select-none flex-1 border-r border-gray-200 border-dashed hover:border-2 hover:border-gray-700 hover:border-dotted
