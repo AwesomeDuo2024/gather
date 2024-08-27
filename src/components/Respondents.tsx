@@ -273,7 +273,7 @@ const Respondents = ({
           <div className="w-full bg-white bottom-0 left-0 p-4 lg:my-3 fixed lg:p-0 lg:static">
             <AddAvailabilityButton />
           </div>
-          <div className="grid grid-cols-2 gap-x-10 gap-y-6 lg:block">
+          <div className="grid grid-cols-2 gap-x-20 gap-y-6 lg:block">
             {/* === Display Respondents === */}
             {sortedRespondents?.map((respondent) => {
               const { name, user_id: userId } = respondent;
@@ -351,11 +351,13 @@ const Respondents = ({
       )}
       {mode == "edit" && (
         <div className="flex fixed gap-4 bottom-0 left-0 py-4 px-8 flex-row-reverse justify-between w-full bg-green-800 lg:bg-transparent lg:flex-col lg:mt-[72px] lg:p-0 lg:static">
-          <h1>Editing availability as {userRef.current.userName}</h1>
+          <h1 className="text-sm text-gray-300 lg:text-gray-800 text-center lg:text-base lg:text-start order-2 self-center lg:self-auto">
+            Editing as {userRef.current.userName}
+          </h1>
           {/* Save Button */}
           <Button
             variant="default"
-            className="text-white bg-green-600 min-w-[8rem] h-12 lg:h-10 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+            className="order-1 lg:order-2 text-white bg-green-600 min-w-[8rem] h-12 lg:h-10 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
             onClick={async () => {
               console.log("Saving...");
               setMode("read");
@@ -377,7 +379,7 @@ const Respondents = ({
           <Button
             variant="outline"
             key={effect}
-            className={`text-red-500 min-w-[8rem] h-12 lg:h-10 lg:border-red-500 hover:bg-red-100 hover:text-red-500`}
+            className={`order-3 text-red-500 min-w-[8rem] h-12 lg:h-10 lg:border-red-500 hover:bg-red-100 hover:text-red-500`}
             onClick={() => {
               console.log("Clicked add availability");
               setMode("read");
