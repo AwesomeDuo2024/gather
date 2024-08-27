@@ -17,6 +17,7 @@ export default function ModeProvider({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  // Available mode values: ["read", "write"]
   const [mode, setMode] = useState<string>("read");
   const [effect, setEffect] = useState<string>("");
 

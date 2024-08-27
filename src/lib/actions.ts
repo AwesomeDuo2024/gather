@@ -413,6 +413,18 @@ export const mapNestedBoolToNestedDateTime = async (
   return output;
 };
 
+export const updateUserAvailability = async (
+  userId: number,
+  newAvailabilityDateTimeBody: string[][]
+) => {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("Availability")
+    .update({ timeslots: newAvailabilityDateTimeBody })
+    .eq("user_id", userId)
+    .select();
+};
+
 // Map boolean[][] to string[datetime][datetime]
 /*
   Applies to: 
