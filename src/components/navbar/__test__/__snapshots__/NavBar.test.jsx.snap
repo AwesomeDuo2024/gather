@@ -53,7 +53,7 @@ exports[`NavBar component matches snapshot should match snapshot 1`] = `
                 class="text-gray-500 hover:text-gray-200 transition-all text-sm lg:text-base"
                 data-radix-collection-item=""
                 data-testid="donate-link"
-                href="https://donate.stripe.com/test_00g7uBbfkcjebNm6oo"
+                href="https://donate.stripe.com/4gw6rbb8O6TDglGfZ0"
               >
                 Donate
               </a>

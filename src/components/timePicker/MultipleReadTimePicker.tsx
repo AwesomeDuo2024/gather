@@ -38,7 +38,7 @@ const MultipleReadTimePicker = ({
         <TimeSlot startTime={startTime!} endTime={endTime!} />
       </div>
       <table
-        ref={multipleReadRef}
+        // ref={multipleReadRef}
         className="flex flex-col order-1 read flex-1"
       >
         <thead className="flex flex-col sticky top-0 py-3 bg-white z-10">
