@@ -1,7 +1,7 @@
 "use client";
 
 import { ModeContext } from "@/app/theme-provider";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import WriteTimePicker from "./WriteTimePicker";
 import ReadTimePicker from "./ReadTimePicker";
 import Respondents from "../Respondents";
@@ -9,6 +9,7 @@ import { AvailabilityDataType, DateData } from "@/lib/schema";
 import { calculateTimeSlotBlocks } from "@/lib/utils";
 import MultipleReadTimePicker from "./MultipleReadTimePicker";
 import ScheduleCalendarEventButton from "@/components/ScheduleCalendarEventButton";
+import EditTimePicker from "./EditTimePicker";
 
 var dayjs = require("dayjs");
 var utc = require("dayjs/plugin/utc");
@@ -127,9 +128,9 @@ const filterAndtransformNestedBoolToNestedNum = (
   }
 };
 
-function findAvailabilities(
+const findAvailabilities = (
   availabilities: AvailabilityDataType[]
-): boolean[][] | null {
+): boolean[][] | null => {
   const filtered_availabilities = availabilities.map(
     (avail) => avail.timeslots
   );
@@ -151,7 +152,7 @@ function findAvailabilities(
   } else {
     return null;
   }
-}
+};
 
 const TimeSlotDragSelector = ({
   defaultSlots,
@@ -195,29 +196,9 @@ const TimeSlotDragSelector = ({
   const dateHeaderDDD = dates?.map((date) =>
     dayjs(date.start_datetime).utc().format("ddd")
   );
-
-  // // Body of Array
-  // // Column
-  // const columnCount = dateHeaderMMMD?.length;
-
-  // // Row
-  // const rowCount = calculateTimeSlotBlocks(
-  //   dates![0].start_datetime,
-  //   dates![0].end_datetime
-  // );
-
-  // const readModeBody: boolean[][] = [];
-  // const writeModeBody: boolean[][] = [];
-  // const readRowArray: boolean[] = new Array(columnCount).fill(false);
-  // const writeRowArray: boolean[] = new Array(columnCount).fill(false);
-
-  // for (let i = 0; i < rowCount; i++) {
-  //   readModeBody.push(readRowArray);
-  //   writeModeBody.push(writeRowArray);
-  // }
-  // console.log("writeModeBody", writeModeBody);
-
+  let userAvailability: undefined | boolean[][] = undefined;
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
+  const userRef = useRef<number>(-1);
   const [readColor, setReadColor] = useState("bg-white");
   const [writeBody, setWriteBody] = useState<boolean[][]>(defaultSlots);
   const [name, setName] = useState<string>("");
@@ -233,6 +214,15 @@ const TimeSlotDragSelector = ({
   const updateWriteSlots = (newSlots: boolean[][]) => {
     setWriteBody([...newSlots]);
   };
+
+  const filteredAvailabilityByUserId = (userId: number): boolean[][] => {
+    return availabilities.filter((avail) => avail.user_id === userId)[0]
+      .timeslots;
+  };
+
+  if (userRef.current !== -1) {
+    userAvailability = filteredAvailabilityByUserId(userRef.current);
+  }
 
   const modifiedAvailabilities = findAvailabilities(availabilities!);
   console.log("modifiedAvailabilities", modifiedAvailabilities);
@@ -282,9 +272,22 @@ const TimeSlotDragSelector = ({
             />
           </>
         )}
+        {mode == "edit" && (
+          <>
+            <EditTimePicker
+              // updateWriteSlots={updateWriteSlots}
+              editModeBody={userAvailability as boolean[][]}
+              dateHeaderDDD={dateHeaderDDD}
+              dateHeaderMMMD={dateHeaderMMMD}
+              startTime={startTime!}
+              endTime={endTime!}
+            />
+          </>
+        )}
       </div>
       <div className="lg:w-1/4">
         <Respondents
+          userRef={userRef}
           dates={dates}
           updateWriteSlots={updateWriteSlots}
           writeModeBody={writeBody}

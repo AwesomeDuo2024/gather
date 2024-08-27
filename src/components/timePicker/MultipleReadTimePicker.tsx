@@ -4,6 +4,7 @@ import { ModeContext } from "@/app/theme-provider";
 import React, { useContext, useEffect, useState } from "react";
 import TimeSlot from "@/components/timePicker/TimeSlot";
 import { getMostRespondents } from "@/lib/utils";
+import { useTableDragSelect } from "use-table-drag-select";
 
 const MultipleReadTimePicker = ({
   availabilities,
@@ -26,6 +27,7 @@ const MultipleReadTimePicker = ({
   console.log("availabilities", availabilities);
   console.log("commonAvailability", commonAvailability);
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
+  const [multipleReadRef, _] = useTableDragSelect(availabilities);
 
   const maxPersonCount: number = getMostRespondents(commonAvailability);
 
@@ -35,7 +37,10 @@ const MultipleReadTimePicker = ({
         <div className="sticky top-0 bg-white h-20 text-transparent">.</div>
         <TimeSlot startTime={startTime!} endTime={endTime!} />
       </div>
-      <table className="flex flex-col order-1 read flex-1">
+      <table
+        ref={multipleReadRef}
+        className="flex flex-col order-1 read flex-1"
+      >
         <thead className="flex flex-col sticky top-0 py-3 bg-white z-10">
           <tr className="flex">
             <th></th>

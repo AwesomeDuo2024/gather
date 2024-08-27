@@ -49,6 +49,7 @@ import { Switch } from "./ui/switch";
 import { Dispatch, SetStateAction } from "react";
 
 const Respondents = ({
+  userRef,
   dates,
   updateWriteSlots,
   writeModeBody,
@@ -57,6 +58,7 @@ const Respondents = ({
   toggleBestTimeslot,
   setToggleBestTimeslot,
 }: {
+  userRef: React.MutableRefObject<number>;
   dates: DateData[];
   updateWriteSlots: (newWriteSlots: boolean[][]) => void;
   writeModeBody: boolean[][];
@@ -138,7 +140,7 @@ const Respondents = ({
 
   return (
     <div>
-      {mode == "write" && (
+      {(mode == "write" || mode == "edit") && (
         <div className="flex fixed gap-4 bottom-0 left-0 py-4 px-8 flex-row-reverse justify-between w-full bg-green-800 lg:bg-transparent lg:flex-col lg:mt-[72px] lg:p-0 lg:static">
           {/* <NameDialog /> */}
           <Dialog>
@@ -147,7 +149,7 @@ const Respondents = ({
                 variant="default"
                 className="text-white bg-green-600 min-w-[8rem] h-12 lg:h-10 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
               >
-                Save
+                Saveee
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[28rem] max-h-[90%] justify-center flex flex-col">
@@ -224,6 +226,11 @@ const Respondents = ({
             onClick={() => {
               console.log("Clicked add availability");
               setMode("read");
+
+              // (Edit -> Read) Refresh router to forcefully fetch availability data from Supabase and override current data
+              router.refresh();
+
+              // (Write -> Read) Override current data with empty data
               const emptyWriteBody = [];
               for (let i = 0; i < writeModeBody.length; i++) {
                 emptyWriteBody.push(
@@ -283,7 +290,8 @@ const Respondents = ({
                         console.log(
                           `You are editing user ${respondent.user_id}`
                         );
-                        setMode("write");
+                        userRef.current = respondent.user_id;
+                        setMode("edit");
                       }}
                     >
                       <Pencil className="h-4 w-4" />
