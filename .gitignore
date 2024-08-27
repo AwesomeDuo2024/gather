@@ -37,3 +37,4 @@ next-env.d.ts
 
 # test
 test.js
+test.cjs

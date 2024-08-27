@@ -9,6 +9,7 @@ import {
   createUser,
   deleteUserAndAvailabilities,
   mapNestedBoolToNestedDateTime,
+  updateUserAvailability,
 } from "@/lib/actions";
 import {
   AlertDialog,
@@ -49,6 +50,8 @@ import { Switch } from "./ui/switch";
 import { Dispatch, SetStateAction } from "react";
 
 const Respondents = ({
+  editModeBodyRef,
+  userRef,
   dates,
   updateWriteSlots,
   writeModeBody,
@@ -57,6 +60,8 @@ const Respondents = ({
   toggleBestTimeslot,
   setToggleBestTimeslot,
 }: {
+  editModeBodyRef: React.MutableRefObject<boolean[][] | undefined>;
+  userRef: React.MutableRefObject<{ userId: number; userName: string }>;
   dates: DateData[];
   updateWriteSlots: (newWriteSlots: boolean[][]) => void;
   writeModeBody: boolean[][];
@@ -68,6 +73,7 @@ const Respondents = ({
   console.log("==========Respondents================");
 
   console.log("writeModeBody", writeModeBody);
+  console.log("editModeBodyRef", editModeBodyRef.current);
   // Returns a alphabeticall sorted list of respondents' names
   const sortedRespondents = respondentsData?.sort((a, b) =>
     a.name.localeCompare(b.name)
@@ -224,6 +230,11 @@ const Respondents = ({
             onClick={() => {
               console.log("Clicked add availability");
               setMode("read");
+
+              // (Edit -> Read) Refresh router to forcefully fetch availability data from Supabase and override current data
+              router.refresh();
+
+              // (Write -> Read) Override current data with empty data
               const emptyWriteBody = [];
               for (let i = 0; i < writeModeBody.length; i++) {
                 emptyWriteBody.push(
@@ -279,7 +290,17 @@ const Respondents = ({
                       variant="outline"
                       size="icon"
                       className="rounded-full border-transparent text-gray-500 hover:bg-blue-100 hover:text-blue-600"
-                      onClick={() => console.log("Edit user")}
+                      onClick={() => {
+                        console.log(
+                          `You are editing user ${respondent.user_id}`
+                        );
+                        userRef.current = {
+                          userId: respondent.user_id,
+                          userName: respondent.name,
+                        };
+
+                        setMode("edit");
+                      }}
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -311,6 +332,7 @@ const Respondents = ({
                             className="bg-red-600 hover:bg-red-700"
                             onClick={() => {
                               deleteUserAndAvailabilities(userId);
+                              userRef.current.userId = -1;
                               // Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
                               router.refresh();
                             }}
@@ -326,6 +348,56 @@ const Respondents = ({
             })}
           </div>
         </>
+      )}
+      {mode == "edit" && (
+        <div className="flex fixed gap-4 bottom-0 left-0 py-4 px-8 flex-row-reverse justify-between w-full bg-green-800 lg:bg-transparent lg:flex-col lg:mt-[72px] lg:p-0 lg:static">
+          <h1>Editing availability as {userRef.current.userName}</h1>
+          {/* Save Button */}
+          <Button
+            variant="default"
+            className="text-white bg-green-600 min-w-[8rem] h-12 lg:h-10 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+            onClick={async () => {
+              console.log("Saving...");
+              setMode("read");
+              const transformedEditBody = await mapNestedBoolToNestedDateTime(
+                editModeBodyRef.current as boolean[][],
+                dates
+              );
+              updateUserAvailability(
+                userRef.current.userId,
+                transformedEditBody
+              );
+              router.refresh();
+            }}
+          >
+            Save
+          </Button>
+
+          {/* Cancel Button */}
+          <Button
+            variant="outline"
+            key={effect}
+            className={`text-red-500 min-w-[8rem] h-12 lg:h-10 lg:border-red-500 hover:bg-red-100 hover:text-red-500`}
+            onClick={() => {
+              console.log("Clicked add availability");
+              setMode("read");
+              userRef.current.userId = -1;
+              // (Edit -> Read) Refresh router to forcefully fetch availability data from Supabase and override current data
+              router.refresh();
+
+              // (Write -> Read) Override current data with empty data
+              const emptyWriteBody = [];
+              for (let i = 0; i < writeModeBody.length; i++) {
+                emptyWriteBody.push(
+                  new Array(writeModeBody[i].length).fill(false)
+                );
+              }
+              updateWriteSlots(emptyWriteBody);
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
       )}
     </div>
   );
