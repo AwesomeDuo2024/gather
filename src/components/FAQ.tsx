@@ -8,8 +8,13 @@ import {
 const FAQ = () => {
   return (
     <div className=" max-w-[56rem] my-12 flex flex-col items-center container">
-      <h2 className="mb-10 font-semibold text-xl lg:text-3xl">Questions? We got you!</h2>
-      <Accordion type="multiple" className="w-full flex flex-col gap-6 text-sm lg:text-base">
+      <h2 className="mb-10 font-semibold text-xl lg:text-3xl">
+        Questions? We got you!
+      </h2>
+      <Accordion
+        type="multiple"
+        className="w-full flex flex-col gap-6 text-sm lg:text-base"
+      >
         <AccordionItem value="item-1">
           <AccordionTrigger>What is Gather?</AccordionTrigger>
           <AccordionContent>
@@ -38,15 +43,22 @@ const FAQ = () => {
               </>
             }{" "}
             That&apos;s it! Gather will automatically find the best time for
-            everyone. Common availabilities are displayed using increasingly darker shades of color, indicating a greater number of respondents available for the specific timeslot(s). {" "}
+            everyone. Common availabilities are displayed using increasingly
+            darker shades of color, indicating a greater number of respondents
+            available for the specific timeslot(s).{" "}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-3">
           <AccordionTrigger>Where I can provide feedback?</AccordionTrigger>
           <AccordionContent>
             We strongly believe in improving our product through user feedback
-            and we value your suggestions. You may reach out to us via [insert
-            link to form, email, github etc.].{" "}
+            and we value your suggestions. You may reach out to us here:{" "}
+            <a
+              className="text-blue-700 underline"
+              href="https://airtable.com/app9sUbN6Jl1WwP1H/pag81xvsAwzbQ3eWI/form"
+            >
+              Feedback form
+            </a>
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-4">
