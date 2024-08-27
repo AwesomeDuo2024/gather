@@ -96,7 +96,7 @@ const ReadTimePicker = ({
                   key={columnIndex}
                   className={`select-none flex-1 border-r border-gray-200 border-dashed
                 
-                ${readValue[rowIndex][columnIndex] ? "bg-red-500" : "white"}`}
+                ${readValue[rowIndex][columnIndex] ? "bg-sky-500" : "white"}`}
                 />
               ))}
             </tr>

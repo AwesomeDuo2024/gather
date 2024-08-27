@@ -193,7 +193,7 @@ const EventForm = ({
                       onSelect={field.onChange}
                       className="rounded-md border caret-transparent flex mx-auto"
                       // Disable past dates => pass Matcher prop https://daypicker.dev/next/api/type-aliases/Matcher
-                      disabled={{ before: new Date() }}
+                      // disabled={{ before: new Date() }}
                       // Set earliest month to current month so users cannot navigate to past months https://daypicker.dev/using-daypicker/navigation#disabling-navigation
                       fromMonth={new Date()}
                       // Set default value of showOutsideDays to false
