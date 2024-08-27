@@ -262,7 +262,9 @@ const TimeSlotDragSelector = ({
               endTime={endTime!}
               toggleBestTimeslot={isChecked}
             />
-            <ScheduleCalendarEventButton eventName={eventName} />
+            <div className="flex justify-end mt-2">
+              <ScheduleCalendarEventButton eventName={eventName} />
+            </div>
           </>
         )}
         {mode == "read" && availabilities.length == 0 && (

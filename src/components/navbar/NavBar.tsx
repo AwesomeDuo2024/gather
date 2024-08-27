@@ -42,7 +42,7 @@ export default function NavBar() {
                 </NavigationMenuLink>
               </Link>
               <Link
-                href="https://donate.stripe.com/test_00g7uBbfkcjebNm6oo"
+                href="https://donate.stripe.com/4gw6rbb8O6TDglGfZ0"
                 legacyBehavior
                 passHref
               >

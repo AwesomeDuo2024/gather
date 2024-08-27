@@ -16,7 +16,7 @@ const ScheduleCalendarEventButton = ({ eventName }: { eventName: string }) => {
       dates: "20240723T074500/20240723T083000",
       details: `Gather+Event+Link:+${window.location.href}`,
       timezone: "Singapore",
-      guests: "example.com,bobby@gmail.com",
+      guests: "example.com",
     };
 
     window.location.href = `https://calendar.google.com/calendar/u/0/r/eventedit?text=${params.text}&dates=${params.dates}&details=${params.details}&ctz=${params.timezone}&add=${params.guests}`;
@@ -25,6 +25,7 @@ const ScheduleCalendarEventButton = ({ eventName }: { eventName: string }) => {
   return (
     <Button variant="outline" onClick={handleClick} className="mt-2">
       <Image src="/gmail.svg" alt="Gmail logo" width={20} height={20} />
+      <span className="hidden lg:inline ml-2">Schedule</span>
     </Button>
   );
 };
