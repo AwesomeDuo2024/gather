@@ -28,7 +28,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
+var dayjs = require("dayjs");
+var utc = require("dayjs/plugin/utc");
+var timezone = require("dayjs/plugin/timezone");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 const CreateEventForm = () => {
+  const localTimeZone = dayjs.tz.guess();
+  const localTodayDate = dayjs().tz(localTimeZone).format("YYYY-MM-DD");
+
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
@@ -165,9 +174,9 @@ const CreateEventForm = () => {
                       onSelect={field.onChange}
                       className="rounded-md border caret-transparent flex mx-auto justify-center"
                       // Disable past dates => pass Matcher prop https://daypicker.dev/next/api/type-aliases/Matcher
-                      disabled={{ before: new Date() }}
+                      disabled={{ before: localTodayDate }}
                       // Set earliest month to current month so users cannot navigate to past months https://daypicker.dev/using-daypicker/navigation#disabling-navigation
-                      fromMonth={new Date()}
+                      fromMonth={localTodayDate}
                       // Set default value of showOutsideDays to false
                     />
                   </FormControl>
