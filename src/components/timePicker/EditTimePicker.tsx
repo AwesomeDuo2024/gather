@@ -18,7 +18,6 @@ const EditTimePicker = ({
   endTime: string;
 }) => {
   const [editRef, editValue] = useTableDragSelect(editModeBodyRef.current);
-  console.log("writeValue", editValue);
   useEffect(() => {
     editModeBodyRef.current = editValue;
   }, [editValue]);
@@ -56,7 +55,6 @@ const EditTimePicker = ({
               {row.map((_, columnIndex) => (
                 <td
                   onClick={() => {
-                    console.log("write clicked");
                     editModeBodyRef.current = editValue;
                   }}
                   key={columnIndex}

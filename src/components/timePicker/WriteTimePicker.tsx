@@ -18,7 +18,6 @@ const WriteTimePicker = ({
   endTime: string;
 }) => {
   const [writeRef, writeValue] = useTableDragSelect(writeModeBody);
-  console.log("writeValue", writeValue);
   useEffect(() => {
     updateWriteSlots(writeValue);
   }, [writeValue]);
@@ -52,9 +51,7 @@ const WriteTimePicker = ({
             <tr className="flex h-[1.5rem] bg-white" key={rowIndex}>
               {row.map((_, columnIndex) => (
                 <td
-                  onClick={() => {
-                    console.log("write clicked");
-                  }}
+                  onClick={() => {}}
                   key={columnIndex}
                   className={`select-none flex-1 border-r border-gray-200 border-dashed hover:border-2 hover:border-gray-700 hover:border-dotted
                  ${

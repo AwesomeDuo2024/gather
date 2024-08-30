@@ -70,10 +70,6 @@ const Respondents = ({
   toggleBestTimeslot: boolean;
   setToggleBestTimeslot: Dispatch<SetStateAction<boolean>>;
 }) => {
-  console.log("==========Respondents================");
-
-  console.log("writeModeBody", writeModeBody);
-  console.log("editModeBodyRef", editModeBodyRef.current);
   // Returns a alphabeticall sorted list of respondents' names
   const sortedRespondents = respondentsData?.sort((a, b) =>
     a.name.localeCompare(b.name)
@@ -89,7 +85,6 @@ const Respondents = ({
   });
 
   const onSubmit = async (data: z.infer<typeof nameSchema>) => {
-    console.log("onSubmit", data);
     toast({
       title: `${data.name}'s availability added`,
       // description: (
@@ -99,7 +94,6 @@ const Respondents = ({
       // ),
     });
     const createdUser = await createUser(data.name, eventId);
-    console.log("createdUser", createdUser);
     // 1. When a user is created successfully
     if (createdUser != "") {
       // 2. Insert availability for the created user
@@ -113,8 +107,6 @@ const Respondents = ({
         eventId
       );
       if (createdAvailability != "") {
-        console.log("createdAvailability", createdAvailability);
-
         //1. Refresh current page to allow server component (page.tsx) to fetch updated data from Supabase.
         router.refresh();
         //2. Toggle to read mode (default)
@@ -228,7 +220,6 @@ const Respondents = ({
             key={effect}
             className={`text-red-500 min-w-[8rem] h-12 lg:h-10 lg:border-red-500 hover:bg-red-100 hover:text-red-500`}
             onClick={() => {
-              console.log("Clicked add availability");
               setMode("read");
 
               // (Edit -> Read) Refresh router to forcefully fetch availability data from Supabase and override current data
@@ -291,9 +282,6 @@ const Respondents = ({
                       size="icon"
                       className="rounded-full border-transparent text-gray-500 hover:bg-blue-100 hover:text-blue-600"
                       onClick={() => {
-                        console.log(
-                          `You are editing user ${respondent.user_id}`
-                        );
                         userRef.current = {
                           userId: respondent.user_id,
                           userName: respondent.name,
@@ -359,7 +347,6 @@ const Respondents = ({
             variant="default"
             className="order-1 lg:order-2 text-white bg-green-600 min-w-[8rem] h-12 lg:h-10 hover:bg-green-500 shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
             onClick={async () => {
-              console.log("Saving...");
               setMode("read");
               const transformedEditBody = await mapNestedBoolToNestedDateTime(
                 editModeBodyRef.current as boolean[][],
@@ -381,7 +368,6 @@ const Respondents = ({
             key={effect}
             className={`order-3 text-red-500 min-w-[8rem] h-12 lg:h-10 lg:border-red-500 hover:bg-red-100 hover:text-red-500`}
             onClick={() => {
-              console.log("Clicked add availability");
               setMode("read");
               userRef.current.userId = -1;
               // (Edit -> Read) Refresh router to forcefully fetch availability data from Supabase and override current data
