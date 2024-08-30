@@ -45,7 +45,6 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   if (error) {
     console.error("Error fetching data from Supabase", error);
   } else {
-    console.log("EventPage Date - ", JSON.stringify(data));
   }
   var dates: DateData[] = [];
   try {
@@ -67,15 +66,12 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
   }[] = data![0].Availability;
 
   const defaultSlots: boolean[][] = data![0].defaultSlots;
-  console.log("defaultSlots", defaultSlots);
 
   // Transform availability timeslots data from string[datetime][datetime] to boolean[][]
   const transformedAvailabilities = availability.map((availability) => {
     const transformedTimeslots: boolean[][] = availability.timeslots.map(
       (row) => {
-        console.log("row", row);
         return row.map((col) => {
-          console.log("col", col);
           if (col === "") return false;
           return true;
         });
@@ -88,27 +84,21 @@ const EventPage = async ({ params }: { params: { event: string } }) => {
     };
   });
 
-  console.log("availabilities", transformedAvailabilities);
-
   // Extract event id from fetched data
   const currentEventId = data && data[0]?.id;
 
   // Extract event name from fetched data
   const currentEventName = getCurrentEventName(data as FetchedData[]);
-  // console.log(currentEventName);
 
   // Extract event start and end time
   const currentEventStartTime = getCurrentEventStartTime(data as FetchedData[]);
   const currentEventEndTime = getCurrentEventEndTime(data as FetchedData[]);
-  // console.log("START", currentEventStartTime, "END", currentEventEndTime);
 
   // Extract event dates (string) and convert each to Date objects
   const currentEventDates = getCurrentEventDates(data as FetchedData[]);
-  // console.log(currentEventDates);
 
   // Extract respondents data to be used in Respondents component
   const respondentsData = data && data[0].User;
-  console.log("EventPage - respondentsData", respondentsData);
 
   return (
     <main className="container px-5 md:px-20 mb-44 lg:mb-20">

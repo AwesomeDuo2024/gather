@@ -103,7 +103,6 @@ const filterAndtransformNestedBoolToNestedNum = (
   );
 
   if (availabilities.length > 1) {
-    console.log("availability length > 1");
     // return [...availabilities][1].timeslots.map((row) => row);
     let temp = addNestedArrays(
       transformed_availabilities[0],
@@ -111,17 +110,13 @@ const filterAndtransformNestedBoolToNestedNum = (
     );
     for (let i = 2; i < transformed_availabilities.length; ++i) {
       const newTemp = [...temp];
-      console.log("newTemp", newTemp);
       temp = addNestedArrays([...newTemp], transformed_availabilities[i]);
     }
-    console.log("temp", temp);
     return temp.map((row) => row);
   } else if (availabilities.length == 1) {
-    console.log("availability length = 0");
     const returnThis: unknown | number[][] = filtered_availabilities
       .map((v1) => v1.map((v2) => v2.map((v3) => (v3 == true ? 1 : 0))))
       .flat();
-    console.log(JSON.stringify(returnThis));
     return returnThis as number[][];
   } else {
     return null;
@@ -136,18 +131,14 @@ const findAvailabilities = (
   );
 
   if (availabilities.length > 1) {
-    console.log("availability length > 1");
     // return [...availabilities][1].timeslots.map((row) => row);
     let temp = compare(filtered_availabilities[0], filtered_availabilities[1]);
     for (let i = 2; i < filtered_availabilities.length; ++i) {
       const newTemp = [...temp];
-      console.log("newTemp", newTemp);
       temp = compare([...newTemp], filtered_availabilities[i]);
     }
-    console.log("temp", temp);
     return temp.map((row) => row);
   } else if (availabilities.length == 1) {
-    console.log("availability length = 0");
     return [...availabilities][0].timeslots.map((row) => row);
   } else {
     return null;
@@ -179,15 +170,6 @@ const TimeSlotDragSelector = ({
   endTime: string | undefined;
   eventName: string;
 }) => {
-  console.log("==========TimeSlotDragSelector================");
-  console.log("availabilities", availabilities);
-  console.log("previousAvailabilitiesDateTime", previousAvailabilitiesDateTime);
-  console.log("dates", dates);
-  console.log("respondentsData", respondentsData);
-  console.log("startTime", startTime);
-  console.log("endTime", endTime);
-  console.log("defaultSlots", defaultSlots);
-
   // ============= Calculate time slots ============= //
   // Header
   const dateHeaderMMMD = dates?.map((date) =>
@@ -201,10 +183,6 @@ const TimeSlotDragSelector = ({
     undefined
   );
 
-  console.log(
-    "userAvailabilityEditBodyRef",
-    userAvailabilityEditBodyRef.current
-  );
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
   const userRef = useRef<{ userId: number; userName: string }>({
     userId: -1,
@@ -241,13 +219,10 @@ const TimeSlotDragSelector = ({
   }
 
   const modifiedAvailabilities = findAvailabilities(availabilities!);
-  console.log("modifiedAvailabilities", modifiedAvailabilities);
-  console.log("writeBody", writeBody);
 
   const transformedAvailabilities = filterAndtransformNestedBoolToNestedNum(
     availabilities!
   );
-  console.log("transformedAvailabilities", transformedAvailabilities);
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-12">
       <div className="w-full">

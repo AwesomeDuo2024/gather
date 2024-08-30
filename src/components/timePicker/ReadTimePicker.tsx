@@ -49,8 +49,6 @@ const ReadTimePicker = ({
   // if the data passed in is of AvailabilityDataType
   const [readRef, readValue] = useTableDragSelect(readModeBody);
 
-  console.log("readValue", readValue);
-  console.log("readRef", readValue);
   // const readSlots = useRef(readValue);
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
   return (
@@ -90,9 +88,7 @@ const ReadTimePicker = ({
             >
               {row.map((_, columnIndex) => (
                 <td
-                  onClick={() => {
-                    console.log("write clicked");
-                  }}
+                  onClick={() => {}}
                   key={columnIndex}
                   className={`select-none flex-1 border-r border-gray-200 border-dashed
                 

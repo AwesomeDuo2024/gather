@@ -17,7 +17,6 @@ var utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
 
 export async function createEvent(eventData: EventData) {
-  console.log("eventData", eventData);
   const supabase = createClient();
   const { eventName, start, end, dates } = eventData;
   const formattedStartTime = dayjs(
@@ -30,8 +29,6 @@ export async function createEvent(eventData: EventData) {
   )
     .utc()
     .format("YYYY-MM-DDTHH:mm:ss");
-  console.log("formattedStartTime", formattedStartTime);
-  console.log("formattedEndTime", formattedEndTime);
   const defaultSlotNumCols: number = dates.length;
   const defaultSlotsNumRows: number = calculateTimeSlotBlocks(
     formattedStartTime,
@@ -41,9 +38,6 @@ export async function createEvent(eventData: EventData) {
   for (let i = 0; i < defaultSlotsNumRows; ++i) {
     defaultSlots.push(new Array(defaultSlotNumCols).fill(false));
   }
-  console.log("defaultSlotNumCols", defaultSlotNumCols);
-  console.log("defaultSlotsNumRows", defaultSlotsNumRows);
-  console.log("defaultSlots", defaultSlots);
   // Insert new record to Event table and return value of id column
   const { data, error } = await supabase
     .from("Event")
@@ -96,12 +90,8 @@ export async function prepareToUpdateAvailability(
     .from("Event")
     .select(`defaultSlots, Date (start_datetime, end_datetime)`)
     .eq("id", eventId);
-  console.log("data", data);
   const defaultSlots: boolean[][] = data?.[0].defaultSlots;
   const dates: DateData[] = data?.[0].Date!;
-  console.log("==============prepareToUpdateAvailability================");
-  console.log("defaultSlots", defaultSlots);
-  console.log("dates", dates);
   const previousAvailabilitiesDateTimeTimeSlots =
     previousAvailabilitiesDateTime.map((avail) => {
       return {
@@ -110,10 +100,6 @@ export async function prepareToUpdateAvailability(
         datetime: avail.timeslots,
       };
     });
-  console.log(
-    "previousAvailabilitiesDateTimeTimeSlots",
-    previousAvailabilitiesDateTimeTimeSlots
-  );
   const defaultSlotsDateTime: string[][] = defaultSlots.map((row, row_idx) => {
     return row.map((col, col_idx) => {
       const date = dayjs(dates[col_idx].start_datetime);
@@ -125,11 +111,8 @@ export async function prepareToUpdateAvailability(
     });
   });
 
-  console.log("defaultSlotsDateTime", defaultSlotsDateTime);
   const earliestDate = dates[0].start_datetime;
   const latestDate = dates[dates.length - 1].end_datetime;
-  console.log("earliestDate", earliestDate);
-  console.log("latestDate", latestDate);
   const common = previousAvailabilitiesDateTimeTimeSlots.map((userAvail) => {
     // 1. For every user find the earliest availability
     const earliestUserAvailbilities = userAvail.availability[0];
@@ -137,66 +120,27 @@ export async function prepareToUpdateAvailability(
     // 2. For every user find the latest availability
     const latestUserAvailabilities =
       userAvail.availability[userAvail.availability.length - 1];
-    console.log("earliestUserAvailbilities", earliestUserAvailbilities);
-    console.log("latestUserAvailabilities", latestUserAvailabilities);
 
     // 3. Find the difference between the latest user availability and the earliest dateslot
     const diffBetweenUserLatestAndTimeSlotEarliest = dayjs(
       latestUserAvailabilities
     ).diff(dayjs(earliestDate), "second");
-    console.log(
-      "diffBetweenUserLatestAndTimeSlotEarliest",
-      diffBetweenUserLatestAndTimeSlotEarliest
-    );
     // 4. Find the difference between the earliest user availability and the latest dateslot
     const diffBetweenUserEarliestAndTimeSlotLatest = dayjs(
       earliestUserAvailbilities
     ).diff(dayjs(latestDate), "second");
-    console.log(
-      "diffBetweenUserEarliestAndTimeSlotLatest",
-      diffBetweenUserEarliestAndTimeSlotLatest
-    );
-
-    // 5a. If the user availability is not within the new date range:
-    // if (
-    //   diffBetweenUserLatestAndTimeSlotEarliest < 0 && // if latest user availability is before earliest date slot
-    //   diffBetweenUserEarliestAndTimeSlotLatest > 0 // if earliest user availability is after latest date slot
-    // ) {
-    //   console.log("No user availabilities to be transferred over");
-    //   return {
-    //     user_id: userAvail.user_id,
-    //     filteredArray: [],
-    //     newDateTime: userAvail.datetime,
-    //   };
-    // }
-    // 5b. If the user availability is within the new date range:
-    // else {
-    // console.log(
-    //   `Yes there is user availablities to be transferred over:\nearliestUserAvailbilities: ${earliestUserAvailbilities}\nlatestUserAvailabilities: ${latestUserAvailabilities}\nearliestDate: ${earliestDate}\nlatestDate: ${latestDate}`
-    // );
 
     // Filter out the user availabilities that are within the new date range
     const filteredArray = userAvail.availability.filter((value) =>
       defaultSlotsDateTime.flat().includes(value)
     );
 
-    console.log("filteredArray", filteredArray);
-
-    // if filteredArray is empty, there is no user availabilities to be transferred over
-    // if (filteredArray.length === 0) {
-    //   console.log("There is no user availabilities to be transferred over");
-    //   return {
-    //     user_id: userAvail.user_id,
-    //     commonAvailability: false,
-    //   };
-    // } else {
     const newDateTime = [...defaultSlotsDateTime].map((row) =>
       row.map((col) => {
         if (!filteredArray.includes(col)) return "";
         else return col;
       })
     );
-    console.log("There is/are user availabilities to be transferred over");
     return {
       user_id: userAvail.user_id,
       commonAvailability: true,
@@ -224,8 +168,6 @@ export async function prepareToUpdateAvailability(
     // }
   });
 
-  console.log("common", JSON.stringify(common));
-
   return common;
 }
 
@@ -237,21 +179,14 @@ export async function updateAvailability(
   }[],
   eventId: number
 ): Promise<void> {
-  console.log("==============updateAvailability================");
-  console.log(
-    "userAvailabilityToUpdate",
-    JSON.stringify(userAvailabilityToUpdate)
-  );
   const supabase = createClient();
   userAvailabilityToUpdate.forEach(async (user) => {
     // if (user.commonAvailability === true) {
-    console.log("user.newDateTime", user.newDateTime as string[][]);
     const { data, error } = await supabase
       .from("Availability")
       .update({ timeslots: user.newDateTime })
       .eq("user_id", user.user_id)
       .select();
-    console.log("data", data);
     // }
   });
 }
@@ -275,8 +210,6 @@ export async function updateEventAndDates(
   )
     .utc()
     .format("YYYY-MM-DDTHH:mm:ss");
-  console.log("formattedStartTime", formattedStartTime);
-  console.log("formattedEndTime", formattedEndTime);
   const newDefaultSlotNumCols: number = dates.length;
   const newDefaultSlotsNumRows: number = calculateTimeSlotBlocks(
     formattedStartTime,
@@ -394,18 +327,14 @@ export const mapNestedBoolToNestedDateTime = async (
   dates: DateData[]
 ): Promise<string[][]> => {
   const output = writeModeBody.map((row, row_idx) => {
-    console.log("row", row);
     return row.map((col, col_idx) => {
-      console.log("col", col);
       if (col === false) return "";
       else {
         const date = dayjs(dates[col_idx].start_datetime);
-        console.log("date", date);
         const val = dayjs(date)
           .add(30 * row_idx, "minute")
           .utc()
           .format("YYYY-MM-DDTHH:mm:ss");
-        console.log("val", val);
         return val;
       }
     });

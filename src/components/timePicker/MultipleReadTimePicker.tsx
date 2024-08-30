@@ -23,9 +23,6 @@ const MultipleReadTimePicker = ({
   endTime: string;
   toggleBestTimeslot: boolean;
 }) => {
-  console.log("========= MultipleReadTimePicker =========");
-  console.log("availabilities", availabilities);
-  console.log("commonAvailability", commonAvailability);
   const { mode, setMode, effect, setEffect } = useContext(ModeContext);
   const [multipleReadRef, _] = useTableDragSelect(availabilities);
 
@@ -70,9 +67,7 @@ const MultipleReadTimePicker = ({
             >
               {row.map((_, columnIndex) => (
                 <td
-                  onClick={() => {
-                    console.log("write clicked");
-                  }}
+                  onClick={() => {}}
                   key={columnIndex}
                   className={`select-none flex-1 border-r border-gray-200 hover:border-2 hover:border-gray-700 border-dotted 
                     ${
